@@ -45,8 +45,8 @@ class ContextProvider {
                         file.getAbsolutePath().contains("com/example/jiangjingbo/asmtest/") &&
                         file.getAbsolutePath().endsWith(".class")) {
                     println "FILE: ${file.getCanonicalPath()}"
-//                    processClass(file)
-                    RedefineClass.processClass(file)
+                    processClass(file)
+//                    RedefineClass.processClass(file)
                 }
             } else if (file.isDirectory()) {
 //                 println "DIR:  ${file}"
@@ -103,12 +103,19 @@ class ContextProvider {
 
                     @Override
                     void visitTryCatchBlock(Label start, Label end, Label handler, String type) {
+                        println  '-------------------》: visitTryCatchBlock'
                         super.visitTryCatchBlock(start, end, handler, type)
                     }
 
                     @Override
+                    void visitTableSwitchInsn(int min, int max, Label dflt, Label... labels) {
+                        println  '-------------------》: visitTableSwitchInsn'
+
+                        super.visitTableSwitchInsn(min, max, dflt, labels)
+                    }
+
+                    @Override
                     void visitInsn(int opcode) {
-                        println 'opcode -->' + opcode
                         if (opcode >= Opcodes.IRETURN && opcode <= Opcodes.RETURN && methondName.contains("onCreate")) {
                             println(methondName + ': visit Insn' )
 
@@ -133,6 +140,24 @@ class ContextProvider {
                                 "printBefore", "(Ljava/lang/String;)V", false);
                         super.visitCode()
                     }
+
+                    @Override
+                    void visitInvokeDynamicInsn(String name_dynamic, String desc_dynamic, Handle bsm_dynamic, Object... bsmArgs) {
+                        println 'name_dynamic --- ' + name_dynamic
+                        println 'desc_dynamic --- ' + desc_dynamic
+                        println  'bsmArgs --- ' + bsmArgs
+                        super.visitInvokeDynamicInsn(name_dynamic, desc_dynamic, bsm_dynamic, bsmArgs)
+                    }
+
+                    @Override
+                    void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
+                        println '》》》》》》》》》》》》》》》》》》》visitLookupSwitchInsn --- '
+                        println keys
+                        println labels
+                        println "dflt" +  dflt
+                        super.visitLookupSwitchInsn(dflt, keys, labels)
+                    }
+
                 }
                 return mv
             }

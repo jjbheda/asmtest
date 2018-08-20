@@ -25,6 +25,24 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
 
         }
+
+        int i=0;
+        int b = 2;
+        int c = i + b +Integer.parseInt("3");
+
+        switch (c) {
+            case 4:
+                Log.e(TAG,"c ==" + 4);
+                break;
+            case 5:
+                Log.e(TAG,"c ==" + 5);
+                Log.e(TAG,getHttp("zhangsan") + "");
+                break;
+            default:
+                break;
+
+        }
+
      }
 
     @BindGet("mike")

@@ -14,7 +14,8 @@ public class LogPrinter {
     }
 
     public static void printException(Exception e) {
-        Log.e(TAG, e + "exception end!!!");
+
+        Log.e(TAG, "e.getmessage()--->" + e.getMessage() + "exception end!!!");
     }
 
 }
