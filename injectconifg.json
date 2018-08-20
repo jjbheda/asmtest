@@ -1,0 +1,8 @@
+
+{
+  "packageconfig": [
+    { "packagename":"com.example.jiangjingbo.asmtest" },
+
+    { "packagename":"com.example.jiangjingbo.sec" }
+  ]
+}

@@ -1,27 +1,26 @@
-package com.example.jiangjingbo.asmtest;
+package com.example.jiangjingbo.sec;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.jiangjingbo.sec.SecActivity;
+import com.example.jiangjingbo.asmtest.BindGet;
+import com.example.jiangjingbo.asmtest.R;
 
-public class MainActivity extends AppCompatActivity {
+public class SecActivity extends AppCompatActivity {
 
-    public static final String TAG = "MainActivity";
-    Button btn,btn_02;
+    public static final String TAG = "SecActivity";
+    Button btn_sec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        btn = (Button) findViewById(R.id.btn);
-        btn_02 = (Button) findViewById(R.id.btn_02);
+        setContentView(R.layout.activity_sec);
+        btn_sec = (Button) findViewById(R.id.btn_sec);
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        btn_sec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -39,15 +38,6 @@ public class MainActivity extends AppCompatActivity {
                 } catch (Exception e) {
 
                 }
-
-            }
-        });
-
-        btn_02.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SecActivity.class);
-                startActivity(intent);
             }
         });
 

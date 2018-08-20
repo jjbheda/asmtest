@@ -1,8 +1,9 @@
 package com.asm.test
 
+import groovy.json.internal.LazyMap
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-
+import groovy.json.JsonSlurper
 class LogCollecter implements Plugin<Project> {
 
     @Override
@@ -11,6 +12,7 @@ class LogCollecter implements Plugin<Project> {
         project.tasks.all { task ->
             ContextProvider contextProvider
             println 'task ---' + task.name
+
             if (task.name.startsWith("compileReleaseJavaWithJavac")) {
                  contextProvider = new ContextProvider(project, 'Release')
             } else if (task.name.startsWith("compileDebugJavaWithJavac")) {
