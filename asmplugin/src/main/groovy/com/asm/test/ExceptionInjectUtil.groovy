@@ -94,7 +94,7 @@ import org.objectweb.asm.commons.AdviceAdapter;
         @Override
          void visitTryCatchBlock(Label start, Label end, Label handle, String type) {
             println '进入try catch 块!!!'
-            //目标exception，可能有多个
+//            //目标exception，可能有多个
             println "type --------" + (type == null ? "null" : "nonull，") + type
             if (type != null) {
                 String exception = matchedHandle.get(handle);
@@ -113,7 +113,6 @@ import org.objectweb.asm.commons.AdviceAdapter;
         @Override
         void visitLabel(Label label) {
             super.visitLabel(label)
-
             println "visitLabel  ---- matchedHandle  --- >" + matchedHandle
             if (label != null && (matchedHandle.get(label)) != null) {
                 println " matchedHandle.get(label) isnot null  --- >"
@@ -124,7 +123,7 @@ import org.objectweb.asm.commons.AdviceAdapter;
                 //调用pushException方法
                 println "调用pushException方法  --- > ,当前name------->" + owner
                 mv.visitMethodInsn(INVOKESTATIC, "com/example/printer/LogPrinter",
-                        "printException", "(Ljava/lang/Exception;)V", false);
+                        "printException", "(Ljava/lang/Throwable;)V", false);
                 visitLabel(end);
             }
         }
