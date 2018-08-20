@@ -5,19 +5,19 @@ import groovy.json.internal.LazyMap
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 
-class ContextProvider {
+class TaskHooker {
     Project project;
     DefaultTask compileTask
     String varNameCap
     ArrayList<String> packageNameList = new ArrayList()
 
-    ContextProvider(Project project, String varNameCap) {
+    TaskHooker(Project project, String varNameCap) {
         this.project = project
         this.varNameCap = varNameCap
         compileTask = project.tasks.findByName("compile${varNameCap}JavaWithJavac")
     }
 
-    Collection<File> getCompileTaskInputFile() {
+    Collection<File> taskHook() {
         Collection<File> inputs = compileTask.outputs.files.files
         //获取到的是Map对象
         File file = new File("injectconifg.json")
@@ -55,7 +55,7 @@ class ContextProvider {
                     for (String packageName : packageNameList) {
                         if (file.getParent().endsWith(packageName)) {
                             println "hack 的class 名字" + file.getName()
-                            InjectUtil.processClass(file)
+                            ExceptionInjectUtil.processClass(file)
                         }
                     }
 

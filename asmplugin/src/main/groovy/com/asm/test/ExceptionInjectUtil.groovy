@@ -8,10 +8,8 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.AdviceAdapter;
 
-/**
- * 重新修改class
- */
- class InjectUtil {
+
+ class ExceptionInjectUtil {
      static void processClass(File file) {
         println "start process class " + file.getPath()
         File optClass = new File(file.getParent(), file.getName() + ".opt");
