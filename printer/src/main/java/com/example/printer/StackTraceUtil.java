@@ -63,7 +63,7 @@ public class StackTraceUtil {
   }
 
   /**
-   * Get the real stack trace, all elements that come from XLog library would be dropped.
+   * Get the real stack trace, all elements that come from LogStorer library would be dropped.
    *
    * @param stackTrace the full stack trace
    * @return the real stack trace, all elements come from system and library user
