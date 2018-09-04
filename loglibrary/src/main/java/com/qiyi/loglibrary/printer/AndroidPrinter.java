@@ -65,6 +65,11 @@ public class AndroidPrinter implements Printer {
     }
   }
 
+  @Override
+  public void println() {
+
+  }
+
   /**
    * Move the end to the nearest line separator('\n') (if exist).
    */

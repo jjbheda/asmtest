@@ -174,6 +174,12 @@ public class PatternFlattener implements Flattener {
     return flattenedLog;
   }
 
+  @Override
+  public CharSequence flatten(String time, int logLevel, String tag, String message) {
+    return flatten(logLevel, tag, message);
+
+  }
+
   /**
    * Fill the original pattern string with formatted date string.
    */

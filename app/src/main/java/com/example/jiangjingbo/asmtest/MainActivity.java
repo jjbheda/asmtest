@@ -17,11 +17,12 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.jiangjingbo.sec.SecActivity;
-import com.qiyi.LogManager;
+import com.qiyi.loglibrary.LogEntity;
 import com.qiyi.loglibrary.LogStorer;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,30 +30,36 @@ public class MainActivity extends AppCompatActivity {
     Button btn,btn_02;
     private boolean hasPermission;
     private static final int PERMISSIONS_REQUEST_EXTERNAL_STORAGE = 1;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         setContentView(R.layout.activity_main);
         btn = (Button) findViewById(R.id.btn);
         btn_02 = (Button) findViewById(R.id.btn_02);
+
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     int[] ss = new int[]{1, 2, 3, 4, 5 ,6 ,7 ,8 ,9 ,10 ,11 ,12 ,13};
+                    int c = 0;
                     for (int i = 0; i < 20; i++) {
-
-                        Log.e("main",ss[i] + "");
-
-//                        LogStorer.w("测试一下错误信息");
-//                        LogStorer.w(Arrays.asList(ss));
+                      c = ss[i];
                     }
 
                 } catch (OutOfMemoryError e) {
 
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    LogStorer.w("this is a error", e);
+                    LogStorer.w("BI", "this is a error", e);
 
                 } catch (IndexOutOfBoundsException e) {
                     LogStorer.w("this is a error", e);
@@ -84,11 +91,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @BindGet("mike")
-    String getHttp(String param) {
-        String url = "http://www.baidu.com/?username" + param;
-        return url;
-    }
+    @Subscribe(threadMode = ThreadMode.MAIN,priority = 100)
+    public void onMessageEvent(LogEntity event) {/* Do something */};
+
+
     private boolean hasPermission() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED;

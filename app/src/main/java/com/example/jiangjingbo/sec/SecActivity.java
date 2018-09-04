@@ -5,9 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
-import com.example.jiangjingbo.asmtest.BindGet;
 import com.example.jiangjingbo.asmtest.R;
+import com.qiyi.loglibrary.LogManager;
+import com.qiyi.loglibrary.LogStorer;
 
 public class SecActivity extends AppCompatActivity {
 
@@ -24,6 +24,7 @@ public class SecActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    LogStorer.e("FW", "这是一个测试");
                     int[] ss = new int[]{1, 2, 3, 4, 5};
                     for (int i = 0; i < 7; i++) {
                         Log.e(TAG, ss[i] + "");
@@ -41,12 +42,6 @@ public class SecActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    @BindGet("mike")
-    String getHttp(String param) {
-        String url = "http://www.baidu.com/?username" + param;
-        return url;
     }
 
 }

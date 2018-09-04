@@ -17,7 +17,7 @@ public class LogConfiguration {
     public int logLevel;
     public String tag;
     public boolean withThread;
-    public boolean withStackTrace;      //是否打印异常  栈信息
+    public boolean withExceptionStackTrace;      //是否打印异常  栈信息
     /**
      * The origin of stack trace elements from which we should NOT log when logging with stack trace,
      * it can be a package name like "com.qiyi.loglibrary", a class name like "com.qiyi.loglibrary.LogStorer",
@@ -41,7 +41,7 @@ public class LogConfiguration {
         logLevel = builder.logLevel;
         tag = builder.tag;
         withThread = builder.withThread;
-        withStackTrace = builder.withStackTrace;
+        withExceptionStackTrace = builder.withExceptionStackTrace;
         stackTraceDepth = builder.stackTraceDepth;
         stackTraceOrigin = builder.stackTraceOrigin;
 
@@ -83,7 +83,7 @@ public class LogConfiguration {
         private int logLevel = DEFAULT_LOG_LEVEL;
         private String tag = DEFAULT_TAG;
         private boolean withThread;
-        private boolean withStackTrace;
+        private boolean withExceptionStackTrace;
         private String stackTraceOrigin;
 
         private int stackTraceDepth;
@@ -101,7 +101,7 @@ public class LogConfiguration {
             tag = logConfiguration.tag;
 
             withThread = logConfiguration.withThread;
-            withStackTrace = logConfiguration.withStackTrace;
+            withExceptionStackTrace = logConfiguration.withExceptionStackTrace;
             stackTraceOrigin = logConfiguration.stackTraceOrigin;
             stackTraceDepth = logConfiguration.stackTraceDepth;
 
@@ -139,19 +139,19 @@ public class LogConfiguration {
         }
 
         public Builder withStackTrace(int depth) {
-            withStackTrace(null, depth);
+            withExceptionStackTrace(null, depth);
             return this;
         }
 
-        public Builder withStackTrace(String stackTraceOrigin, int depth) {
-            this.withStackTrace = true;
+        public Builder withExceptionStackTrace(String stackTraceOrigin, int depth) {
+            this.withExceptionStackTrace = true;
             this.stackTraceOrigin = stackTraceOrigin;
             this.stackTraceDepth = depth;
             return this;
         }
 
-        public Builder withNoStackTrace() {
-            this.withStackTrace = false;
+        public Builder withNoExceptionStackTrace() {
+            this.withExceptionStackTrace = false;
             this.stackTraceOrigin = null;
             this.stackTraceDepth = 0;
             return this;

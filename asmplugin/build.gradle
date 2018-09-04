@@ -21,3 +21,10 @@ afterEvaluate { project->
         }
     }
 }
+
+task buildJar(type: Jar, dependsOn: ['build']) {
+    archiveName = "logcolletor.jar"
+    from('build/classes/groovy/main')
+    destinationDir = file("${project(':asmplugin').projectDir}/libs")
+//    include('com/asm/test/*.class')
+}

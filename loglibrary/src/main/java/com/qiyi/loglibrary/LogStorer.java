@@ -1,6 +1,7 @@
 package com.qiyi.loglibrary;
 
-import com.qiyi.LogManager;
+import android.content.Context;
+
 import com.qiyi.loglibrary.formatter.object.ObjectFormatter;
 import com.qiyi.loglibrary.formatter.stacktrace.StackTraceFormatter;
 import com.qiyi.loglibrary.formatter.thread.ThreadFormatter;
@@ -9,12 +10,20 @@ import com.qiyi.loglibrary.interceptor.Interceptor;
 import com.qiyi.loglibrary.printer.Printer;
 import com.qiyi.loglibrary.printer.PrinterSet;
 import com.qiyi.loglibrary.util.DefaultsFactory;
+import com.qiyi.loglibrary.util.PollingTimerUtil;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class LogStorer {
    private static boolean sIsInitialized;
    public static LogConfiguration mLogConfiguration;
    private static LogManager mLogManager;
+
+   public static Context mBaseContext;
+
     /**
      * Global log printer.
      */
@@ -26,11 +35,11 @@ public class LogStorer {
         }
     }
 
-    public static void init(LogConfiguration logConfiguration) {
-        init(logConfiguration, DefaultsFactory.createPrinter());
+    public static void init(Context context, LogConfiguration logConfiguration) {
+        init(context, logConfiguration, DefaultsFactory.createPrinter());
     }
 
-    public static void init(LogConfiguration logConfiguration, Printer... printers) {
+    public static void init(Context context, LogConfiguration logConfiguration, Printer... printers) {
         if (sIsInitialized) {
             Platform.get().warn("LogStorer is already initialized, do not initialize again");
         }
@@ -43,10 +52,14 @@ public class LogStorer {
         mLogConfiguration = logConfiguration;
         mPrinter = new PrinterSet(printers);
         mLogManager = new LogManager(mLogConfiguration, mPrinter);
+        mBaseContext = context;
+
+        PollingTimerUtil util = new PollingTimerUtil();
+        util.begin();
     }
 
-    public static void init(int logLevel, LogConfiguration logConfiguration, Printer... printers) {
-        init(new LogConfiguration.Builder(logConfiguration).logLevel(logLevel).build(), printers);
+    public static void init(Context context, int logLevel, LogConfiguration logConfiguration, Printer... printers) {
+        init(context, new LogConfiguration.Builder(logConfiguration).logLevel(logLevel).build(), printers);
     }
 
     public static LogManager.Builder logLevel(int logLevel) {
@@ -198,6 +211,13 @@ public class LogStorer {
         mLogManager.w(msg, tr);
     }
 
+
+    public static void w(String moduleName, String msg, Throwable tr) {
+        assertInitialized();
+        mLogManager.w(moduleName, msg, tr);
+    }
+
+
     public static void e(Object o) {
         assertInitialized();
         mLogManager.e(o);
@@ -208,10 +228,16 @@ public class LogStorer {
         mLogManager.e(array);
     }
 
-    public static void e(String format, Object... args) {
+//    public static void e(String format, Object... args) {
+//        assertInitialized();
+//        mLogManager.e(format, args);
+//    }
+
+        public static void e(String moduleName,String msg) {
         assertInitialized();
-        mLogManager.e(format, args);
+        mLogManager.e(moduleName, msg);
     }
+
 
     public static void e(String msg) {
         assertInitialized();

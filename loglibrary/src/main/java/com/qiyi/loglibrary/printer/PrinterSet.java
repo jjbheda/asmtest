@@ -13,4 +13,11 @@ public class PrinterSet implements Printer {
             printer.println(loglevel, tag, msg);
         }
     }
+
+    @Override
+    public void println() {
+        for (Printer printer : printers) {
+            printer.println();
+        }
+    }
 }

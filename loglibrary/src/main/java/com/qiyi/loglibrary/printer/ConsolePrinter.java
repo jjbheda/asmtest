@@ -31,5 +31,10 @@ public class ConsolePrinter implements Printer {
         String flattenedLog = flattener.flatten(logLevel, tag, msg).toString();
         System.out.println(flattenedLog);
     }
+
+    @Override
+    public void println() {
+
+    }
 }
 

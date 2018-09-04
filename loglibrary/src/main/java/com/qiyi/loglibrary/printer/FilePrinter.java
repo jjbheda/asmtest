@@ -38,6 +38,11 @@ public class FilePrinter implements Printer {
         recorder.enqueue(new LogEntity(logLevel, tag, msg));
     }
 
+    @Override
+    public void println() {
+
+    }
+
     private void checkLogFolder() {
         File folder = new File(folderPath);
         if (!folder.exists()) {
