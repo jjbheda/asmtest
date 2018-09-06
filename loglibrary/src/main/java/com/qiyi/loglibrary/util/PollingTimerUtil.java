@@ -1,11 +1,9 @@
 package com.qiyi.loglibrary.util;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.qiyi.loglibrary.Constant;
 import com.qiyi.loglibrary.LogEntity;
-import com.qiyi.loglibrary.printer.FilePrinterWithPool;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

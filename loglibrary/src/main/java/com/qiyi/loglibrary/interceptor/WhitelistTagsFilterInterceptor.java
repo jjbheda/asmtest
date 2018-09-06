@@ -40,7 +40,7 @@ public class WhitelistTagsFilterInterceptor extends AbstractFilterInterceptor {
     protected boolean reject(LogEntity log) {
         if (whitelistTags != null) {
             for (String enabledTag : whitelistTags) {
-                if (log.tag.equals(enabledTag)) {
+                if (log.moduleName.equals(enabledTag)) {
                     return false;
                 }
             }

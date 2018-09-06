@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 
 import com.qiyi.loglibrary.printer.AndroidPrinter;
-import com.qiyi.loglibrary.printer.ConsolePrinter;
 import com.qiyi.loglibrary.printer.Printer;
 
 public class Platform {
@@ -20,7 +19,7 @@ public class Platform {
     }
 
    public Printer defaultPrinter() {
-        return new ConsolePrinter();
+        return new AndroidPrinter();
     }
 
     public void warn(String msg) {

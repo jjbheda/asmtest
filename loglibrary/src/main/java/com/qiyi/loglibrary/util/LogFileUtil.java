@@ -7,10 +7,9 @@ import com.qiyi.loglibrary.Constant;
 import com.qiyi.loglibrary.menu.DateDirGenerator;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 
-public class FileUitl {
+public class LogFileUtil {
+    private static String TAG = "LogFileUtil";
 
     /**
      * 获取指定文件夹
@@ -55,7 +54,7 @@ public class FileUitl {
         if (StringUtils.isEmpty(filePath)) {
             return size;
         }
-       File file = new File(filePath);
+        File file = new File(filePath);
         if (file.exists()) {
             size = file.length();
         }
@@ -75,4 +74,49 @@ public class FileUitl {
         return dateDir.getPath();
     }
 
+    /**
+     *
+     * @param moduleName 标签名，如 FW
+     * @param date 如2018-09-07
+     * @return
+     */
+    public static File[] readDir(String moduleName, String date) {
+        File rootPath = new File(Environment.getExternalStorageDirectory(), Constant.ROOT_DIR);
+        if (!rootPath.exists()) {
+            Log.e(TAG, "日志总目录不存在!");
+            return null;
+        }
+
+        File dateDir = new File(rootPath, date);
+        if (!dateDir.exists()) {
+            Log.e(TAG, date + "无日志文件");
+            return null;
+        }
+
+        File moduleDir = new File(dateDir, moduleName);
+        if (!moduleDir.exists()) {
+            Log.e(TAG, date + "/" + moduleDir + "目录不存在");
+            return null;
+        }
+
+        File[] logFileList = moduleDir.listFiles();
+        if (logFileList == null || logFileList.length == 0) {
+            Log.e(TAG, date + "/" + moduleDir + "文件夹是空的");
+            return null;
+        }
+
+        return logFileList;
+    }
+
+    /**
+     * 未避免产生性能问题，读取日志操作应该放在专门的线程池中
+     * @param file 单个日志文件
+     * @return
+     */
+
+    public static String readLog(File file) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(FileUtils.file2String(file));
+        return sb.toString();
+    }
 }

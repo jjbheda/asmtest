@@ -9,18 +9,18 @@ import java.util.ArrayList;
 public class CacheLogBeanPool {
     private boolean writtingFlag = false;
     private String filePath;
-    private String tag;
+    private String moduleName;
     private Flattener flattener;
 
-    public CacheLogBeanPool(Flattener flattener, String tag) {
-        this.tag = tag;
+    public CacheLogBeanPool(Flattener flattener, String moduleName) {
+        this.moduleName = moduleName;
         this.flattener = flattener;
     }
 
     public ArrayList<CacheLogBeanWrapper> beanArray = new ArrayList();
 
     public void addBean(LogEntity logEntity) {
-        CacheLogBeanWrapper bean = new CacheLogBeanWrapper(logEntity.level, logEntity.tag, logEntity.msg ,flattener);
+        CacheLogBeanWrapper bean = new CacheLogBeanWrapper(logEntity.level, logEntity.moduleName, logEntity.msg ,flattener);
         bean.setTime(TimeUtil.getFormateTimeStr(System.currentTimeMillis()));
         beanArray.add(bean);
     }
@@ -42,8 +42,8 @@ public class CacheLogBeanPool {
         return writtingFlag;
     }
 
-    public String getTag() {
-        return tag;
+    public String getModuleName() {
+        return moduleName;
     }
 
 }

@@ -18,7 +18,7 @@ public class CacheLogBeanWrapper extends LogEntity{
     }
 
     public String getFlatterMsg() {
-        return flattener.flatten(time, level, tag, msg).toString();
+        return flattener.flatten(time, level, moduleName, msg).toString() + "\n";
     }
 
     public CacheLogBeanWrapper(int level, String tag, String msg, String threadInfo, String stackTraceInfo) {

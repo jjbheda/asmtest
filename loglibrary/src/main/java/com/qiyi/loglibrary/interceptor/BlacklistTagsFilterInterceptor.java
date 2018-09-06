@@ -23,7 +23,7 @@ public class BlacklistTagsFilterInterceptor extends AbstractFilterInterceptor {
     protected boolean reject(LogEntity log) {
         if (blackListTags != null) {
             for (String disableTag : blackListTags) {
-                if (log.tag.equals(disableTag)) {
+                if (log.moduleName.equals(disableTag)) {
                     return true;
                 }
             }

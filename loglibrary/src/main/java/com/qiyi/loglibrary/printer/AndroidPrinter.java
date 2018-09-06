@@ -16,6 +16,8 @@
 
 package com.qiyi.loglibrary.printer;
 
+import com.qiyi.loglibrary.Constant;
+
 /**
  * Log {@link Printer} using {@link android.util.Log}.
  */
@@ -49,6 +51,7 @@ public class AndroidPrinter implements Printer {
 
   @Override
   public void println(int logLevel, String tag, String msg) {
+    tag = Constant.ROOT_TAG + "_"  + tag;
     if (msg.length() <= maxChunkSize) {
       printChunk(logLevel, tag, msg);
       return;

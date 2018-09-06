@@ -15,6 +15,7 @@ import java.util.Map;
 
 public class LogConfiguration {
     public int logLevel;
+    public String moduleName;
     public String tag;
     public boolean withThread;
     public boolean withExceptionStackTrace;      //是否打印异常  栈信息
@@ -39,6 +40,7 @@ public class LogConfiguration {
 
     public LogConfiguration(Builder builder) {
         logLevel = builder.logLevel;
+        moduleName = builder.moduleName;
         tag = builder.tag;
         withThread = builder.withThread;
         withExceptionStackTrace = builder.withExceptionStackTrace;
@@ -81,6 +83,7 @@ public class LogConfiguration {
         private static final int DEFAULT_LOG_LEVEL = LogLevel.ALL;
         private static final String DEFAULT_TAG = "LOG_STORER";
         private int logLevel = DEFAULT_LOG_LEVEL;
+        private String moduleName = DEFAULT_TAG;
         private String tag = DEFAULT_TAG;
         private boolean withThread;
         private boolean withExceptionStackTrace;
@@ -98,8 +101,8 @@ public class LogConfiguration {
 
         public Builder(LogConfiguration logConfiguration) {
             logLevel = logConfiguration.logLevel;
+            moduleName = logConfiguration.moduleName;
             tag = logConfiguration.tag;
-
             withThread = logConfiguration.withThread;
             withExceptionStackTrace = logConfiguration.withExceptionStackTrace;
             stackTraceOrigin = logConfiguration.stackTraceOrigin;
@@ -120,6 +123,11 @@ public class LogConfiguration {
 
         public Builder logLevel(int logLevel) {
             this.logLevel = logLevel;
+            return this;
+        }
+
+        public Builder moduleName(String moduleName) {
+            this.moduleName = moduleName;
             return this;
         }
 
