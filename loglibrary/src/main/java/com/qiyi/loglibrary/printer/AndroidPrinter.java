@@ -50,7 +50,7 @@ public class AndroidPrinter implements Printer {
   }
 
   @Override
-  public void println(int logLevel, String tag, String msg) {
+  public void println(int logLevel, String tag, String msg, boolean isThrowable) {
     tag = Constant.ROOT_TAG + "_"  + tag;
     if (msg.length() <= maxChunkSize) {
       printChunk(logLevel, tag, msg);

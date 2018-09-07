@@ -1,6 +1,5 @@
 package com.qiyi.loglibrary;
 
-import android.os.Environment;
 import android.util.Log;
 
 import com.qiyi.loglibrary.flattener.DefaultFlattener;
@@ -11,9 +10,6 @@ import com.qiyi.loglibrary.formatter.throwable.ThrowableFormatter;
 import com.qiyi.loglibrary.interceptor.Interceptor;
 import com.qiyi.loglibrary.printer.AndroidPrinter;
 import com.qiyi.loglibrary.printer.FilePrinter;
-import com.qiyi.loglibrary.printer.Printer;
-import com.qiyi.loglibrary.printer.PrinterSet;
-import com.qiyi.loglibrary.printer.naming.DefaultFileNameGenerator;
 import com.qiyi.loglibrary.strategy.LogLevel;
 import com.qiyi.loglibrary.util.DefaultsFactory;
 import com.qiyi.loglibrary.util.StackTraceUtil;
@@ -22,7 +18,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +31,7 @@ public class LogManager {
 
     private LogConfiguration logConfiguration;
     private AndroidPrinter androidPrinter;
-    FilePrinter filePrinter;
+    private FilePrinter filePrinter;
 
     public LogManager(LogConfiguration logConfiguration) {
         this.logConfiguration = logConfiguration;
@@ -105,71 +100,9 @@ public class LogManager {
         filePrinter = new FilePrinter.Builder().logFlattener(new DefaultFlattener()).build();
     }
 
-//    public void v(Object object) {
-//        println(LogLevel.VERBOSE, object);
-//    }
-
-    public void v(Object[] array) {
-        println(LogLevel.VERBOSE, array);
-    }
-
-//    public void v(String msg) {
-//        println(LogLevel.VERBOSE, msg);
-//    }
-
-//    public void v(String format, Object... args) {
-//        println(LogLevel.VERBOSE, format, args);
-//    }
-
-//    public void v(String msg, Throwable tr) {
-//        println(LogLevel.VERBOSE, msg, tr);
-//    }
-
-    public void d(Object[] array) {
-        println(LogLevel.DEBUG, array);
-    }
-
-//    public void d(String format, Object... args) {
-//        println(LogLevel.DEBUG, format, args);
-//    }
-
-
     public void d(String moduleName, String msg) {
         println(LogLevel.DEBUG, moduleName, msg);
     }
-
-//    public void i(Object object) {
-//        println(LogLevel.INFO, object);
-//    }
-//
-//    public void i(Object[] array) {
-//        println(LogLevel.INFO, array);
-//    }
-
-//    public void i(String format, Object... args) {
-//        println(LogLevel.INFO, format, args);
-//    }
-
-//    public void i(String msg) {
-//        println(LogLevel.INFO, msg);
-//    }
-//
-//    public void i(String msg, Throwable tr) {
-//        println(LogLevel.INFO, msg, tr);
-//    }
-
-//    public void w(Object object) {
-//        println(LogLevel.WARN, object);
-//    }
-
-    public void w(Object[] array) {
-        println(LogLevel.WARN, array);
-    }
-
-//    public void w(String format, Object... args) {
-//        println(LogLevel.WARN, format, args);
-//    }
-
 
     public void w(String moduleName, Throwable tr) {
         println(LogLevel.WARN, moduleName, tr);
@@ -178,42 +111,10 @@ public class LogManager {
     public void w(String moduleName, String msg) {
         println(LogLevel.WARN, moduleName, msg);
     }
-//    public void e(Object object) {
-//        println(LogLevel.ERROR, object);
-//    }
-
-    public void e(Object[] array) {
-        println(LogLevel.ERROR, array);
-    }
 
     public void e(String moduleName, String msg) {
         println(LogLevel.ERROR, moduleName, msg);
     }
-
-
-//    public void e(String msg) {
-//        println(LogLevel.ERROR, msg);
-//    }
-//
-//    public void e(String msg, Throwable tr) {
-//        println(LogLevel.ERROR, msg, tr);
-//    }
-
-//    public void log(int logLevel, Object object) {
-//        println(logLevel, object);
-//    }
-
-    public void log(int logLevel, Object[] array) {
-        println(logLevel, array);
-    }
-
-//    public void log(int logLevel, String format, Object... args) {
-//        println(logLevel, format, args);
-//    }
-
-//    public void log(int logLevel, String msg) {
-//        println(logLevel, msg);
-//    }
 
     public void log(String moduleName, int logLevel, String msg, Throwable tr) {
         if (logLevel < logConfiguration.logLevel) {
@@ -236,14 +137,6 @@ public class LogManager {
         printlnInternalWithThrowble(moduleName, logLevel, msg, tr);
     }
 
-    public void println(int logLevel, Object[] array) {
-        if (logLevel < logConfiguration.logLevel) {
-            return;
-        }
-        printlnInternal(logLevel, array.toString());
-    }
-
-
     private void println(String moduleName, int logLevel, String format, Object... args) {
         if (logLevel < logConfiguration.logLevel) {
             return;
@@ -258,13 +151,6 @@ public class LogManager {
         printlnInternal(logLevel, moduleName, msg);
     }
 
-//    private void println(int logLevel, String format, Object... args) {
-//        if (logLevel < logConfiguration.logLevel) {
-//            return;
-//        }
-//        printlnInternal(logLevel, formatArgs(format, args));
-//    }
-
     private void println(int logLevel, String moduleName, Throwable e) {
         if (logLevel < logConfiguration.logLevel) {
             return;
@@ -278,31 +164,6 @@ public class LogManager {
         }
         printlnInternal(logLevel,moduleName, msg);
     }
-//
-//    private <T> void println(String moduleName, int logLevel, T object) {
-//        if (logLevel < logConfiguration.logLevel) { //过滤日志级别
-//            return;
-//        }
-//
-//        if (object instanceof Throwable) {
-//            printlnInternalWithThrowble(moduleName,logLevel,"", (Throwable) object);
-//            return;
-//        }
-//
-//        String objectString;
-//        if (object != null) {
-//            ObjectFormatter<? super T> objectFormatter = logConfiguration.getObjectFormatter(object);
-//            if (objectFormatter != null) {
-//                objectString = objectFormatter.format(object);
-//            } else {
-//                objectString = object.toString();
-//            }
-//        } else {
-//            objectString = "null";
-//        }
-//
-//        printlnInternal(logLevel, objectString);
-//    }
 
     private void printlnInternalWithThrowble(String moduleName, int logLevel, String msg, Throwable tr) {
 
@@ -337,41 +198,11 @@ public class LogManager {
             stackTrace = log.stackTraceInfo;
             msg = log.msg;
         }
-
+        boolean isThrowable = (tr != null);
         androidPrinter.println(logLevel, moduleName, (thread != null ? (thread + SystemCompat.lineSeparator) : "")
-                + (stackTrace != null ? (stackTrace + SystemCompat.lineSeparator) : "") + msg);
+                + (stackTrace != null ? (stackTrace + SystemCompat.lineSeparator) : "") + msg, isThrowable );
         filePrinter.println(logLevel, moduleName, (thread != null ? (thread + SystemCompat.lineSeparator) : "")
-                + (stackTrace != null ? (stackTrace + SystemCompat.lineSeparator) : "") + msg);
-    }
-
-    private void printlnInternal(int logLevel, String msg) {
-        String tag = logConfiguration.tag;
-        String thread = logConfiguration.withThread
-                ? logConfiguration.threadFormatter.format(Thread.currentThread()) : null;
-
-        if (logConfiguration.interceptors != null) {
-            LogEntity log = new LogEntity(logLevel, tag, msg, thread);
-            for (Interceptor interceptor : logConfiguration.interceptors) {
-                log = interceptor.intercept(log);
-                if (log == null) {
-                    return;
-                }
-
-                // Check if the log still healthy.
-                if (log.moduleName == null || log.msg == null) {
-                    throw new IllegalStateException("Interceptor " + interceptor
-                            + " should not remove the tag or message of a log,"
-                            + " if you don't want to print this log,"
-                            + " just return a null when intercept.");
-                }
-            }
-
-            logLevel = log.level;
-            tag = log.moduleName;
-            thread = log.threadInfo;
-            msg = log.msg;
-        }
-        androidPrinter.println(logLevel, tag, (thread != null ? (thread + SystemCompat.lineSeparator) : "") + msg);
+                + (stackTrace != null ? (stackTrace + SystemCompat.lineSeparator) : "") + msg, isThrowable);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN,priority = 100)
@@ -383,7 +214,6 @@ public class LogManager {
     }
 
     private void printlnInternal(int logLevel, String moduleName, Throwable tr) {
-//        String tag = logConfiguration.tag;
         String thread = logConfiguration.withThread
                 ? logConfiguration.threadFormatter.format(Thread.currentThread()) : null;
 
@@ -416,12 +246,12 @@ public class LogManager {
 
         String msg = (thread != null ? (thread + SystemCompat.lineSeparator) : "")
                 + (stackTrace != null ? (stackTrace + SystemCompat.lineSeparator) : "") ;
-        androidPrinter.println(logLevel, moduleName, msg);
-        filePrinter.println(logLevel, moduleName, msg);
+        boolean isThrowable = (tr != null);
+        androidPrinter.println(logLevel, moduleName, msg, isThrowable);
+        filePrinter.println(logLevel, moduleName, msg, isThrowable);
     }
 
     private void printlnInternal(int logLevel, String moduleName, String msg) {
-//        String tag = logConfiguration.tag;
         String thread = logConfiguration.withThread
                 ? logConfiguration.threadFormatter.format(Thread.currentThread()) : null;
 
@@ -447,8 +277,8 @@ public class LogManager {
             thread = log.threadInfo;
             msg = log.msg;
         }
-        androidPrinter.println(logLevel, moduleName, (thread != null ? (thread + SystemCompat.lineSeparator) : "") + msg);
-        filePrinter.println(logLevel, moduleName, msg);
+        androidPrinter.println(logLevel, moduleName, (thread != null ? (thread + SystemCompat.lineSeparator) : "") + msg , false);
+        filePrinter.println(logLevel, moduleName, msg, false);
     }
 
     private String formatArgs(String format, Object... args) {
@@ -500,7 +330,6 @@ public class LogManager {
         private StackTraceFormatter stackTraceFormatter;
         private List<Interceptor> interceptors;
         private Map<Class<?>, ObjectFormatter<?>> objectFormatters;
-        private Printer printer;
 
         public Builder() {
             LogStorer.assertInitialized();
@@ -588,22 +417,6 @@ public class LogManager {
             interceptors.add(interceptor);
             return this;
         }
-
-        public Builder printers(Printer... printers) {
-            if (printers.length == 0) {
-                this.printer = null;
-            } else if (printers.length == 1) {
-                this.printer = printers[0];
-            } else {
-                this.printer = new PrinterSet(printers);
-            }
-            return this;
-        }
-
-//        public void v(Object object) {
-//            build().v(object);
-//        }
-
 
         public LogManager build() {
             return new LogManager(this);

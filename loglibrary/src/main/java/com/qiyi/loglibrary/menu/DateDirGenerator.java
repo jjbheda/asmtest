@@ -11,11 +11,14 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class DateDirGenerator {
+    public static String DATE_PATTERN = "yy-MM-dd";
+    public static Locale DATE_LOCALE = Locale.US;
+
 
     static ThreadLocal<SimpleDateFormat> mLocalDateFormat = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            return new SimpleDateFormat(DATE_PATTERN, DATE_LOCALE);
         }
     };
 

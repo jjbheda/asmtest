@@ -7,10 +7,13 @@ import com.qiyi.loglibrary.Constant;
 import com.qiyi.loglibrary.menu.DateDirGenerator;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class LogFileUtil {
     private static String TAG = "LogFileUtil";
-
     /**
      * 获取指定文件夹
      * @param dir 要扫描的文件夹
@@ -109,6 +112,37 @@ public class LogFileUtil {
     }
 
     /**
+     * 获取总目录下，日期目录文件
+     *
+     * @return
+     */
+    public static void removeOldDayDir() {
+        File rootPath = new File(Environment.getExternalStorageDirectory(), Constant.ROOT_DIR);
+        if (!rootPath.exists()) {
+            Log.e(TAG, "日志总目录不存在!");
+            return;
+        }
+
+        File[] logFileList = rootPath.listFiles();
+        if (logFileList == null || logFileList.length == 0) {
+            Log.e(TAG,  "日志总目录,文件夹是空的");
+            return;
+        }
+
+        for (File file : logFileList) {
+            String dateName = file.getName();
+            Date date = LogDateUtils.getDate(dateName);
+            if (date != null) {
+                if (LogDateUtils.isOverTime(new Date(), date, Constant.INTERVAL_DAY)) {
+                    FileUtils.deleteFiles(file);
+                    Log.e(TAG,  "删除文件夹: " + file.getAbsolutePath());
+                }
+            }
+        }
+    }
+
+
+    /**
      * 未避免产生性能问题，读取日志操作应该放在专门的线程池中
      * @param file 单个日志文件
      * @return
@@ -119,4 +153,15 @@ public class LogFileUtil {
         sb.append(FileUtils.file2String(file));
         return sb.toString();
     }
+
+    /**
+     * 判断是否有需要删除的文件,规则：超过5天的文件会被删除掉
+     *
+     */
+
+    public void rmOldDir(String tag, Date date) {
+
+
+    }
+
 }

@@ -29,9 +29,13 @@ public class SecActivity extends AppCompatActivity {
 
                 try {
 //                    int[] array = {1, 2, 3, 4, 5};
-                    for (int i = 0; i < 10000; i++) {
-                        LogStorer.w("FW", i + "");
-                    }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                               print(6);
+                        }
+                    }).start();
+
                 } catch (OutOfMemoryError e) {
 
                 } catch (ArrayIndexOutOfBoundsException e) {
@@ -47,10 +51,21 @@ public class SecActivity extends AppCompatActivity {
         btn_upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogUpload.getLog("FW", "2018-09-06");
+                LogUpload.getLog("log_0", "2018-09-06");
             }
         });
 
+
+    }
+
+    private void print(int tag) {
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 100 ;j++) {
+                LogStorer.w("Log_" + i, "中非合作论坛北京峰会闭幕后----" +  j + "");
+            }
+//                        LogStorer.w("FW",i + "");
+        }
     }
 
 }

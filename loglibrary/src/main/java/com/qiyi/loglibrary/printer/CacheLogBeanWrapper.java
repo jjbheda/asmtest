@@ -3,11 +3,13 @@ package com.qiyi.loglibrary.printer;
 import com.qiyi.loglibrary.LogEntity;
 import com.qiyi.loglibrary.flattener.Flattener;
 
-public class CacheLogBeanWrapper extends LogEntity{
+import java.util.concurrent.CountDownLatch;
 
-    private String flatterMsg = "";
+public class CacheLogBeanWrapper extends LogEntity {
+
     private String time;
     private Flattener flattener;
+
 
     public String getTime() {
         return time;
@@ -19,6 +21,10 @@ public class CacheLogBeanWrapper extends LogEntity{
 
     public String getFlatterMsg() {
         return flattener.flatten(time, level, moduleName, msg).toString() + "\n";
+    }
+
+    public String getCheckFlatterMsg() {
+        return flattener.flatten(level, moduleName, msg).toString() + "\n";
     }
 
     public CacheLogBeanWrapper(int level, String tag, String msg, String threadInfo, String stackTraceInfo) {

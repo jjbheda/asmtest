@@ -49,8 +49,17 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogStorer.d("BI", "test" + i);
-                i ++;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 1; i < 10000; i++) {
+                            LogStorer.e("BI", "中非合作论坛北京峰会闭幕后，" +
+                                    "9月4日晚，习近平主席同前来出席峰会的卢旺达总统、" +
+                                    "非盟轮值主席卡加梅会面，表达了对此次盛会成功举办的心情-----。" + i + "");
+//                        LogStorer.w("FW",i + "");
+                        }
+                    }
+                }).start();
 
             }
         });
