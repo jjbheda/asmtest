@@ -120,8 +120,9 @@ public class LogFileUtil {
         File rootPath = new File(Environment.getExternalStorageDirectory(), Constant.ROOT_DIR);
         if (!rootPath.exists()) {
             Log.e(TAG, "日志总目录不存在!");
-            return;
         }
+
+        rootPath.mkdirs();
 
         File[] logFileList = rootPath.listFiles();
         if (logFileList == null || logFileList.length == 0) {
