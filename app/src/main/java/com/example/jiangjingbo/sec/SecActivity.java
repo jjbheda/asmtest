@@ -29,9 +29,9 @@ public class SecActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        for (int i = 0; i< 100; i++) {
-                            testTr();
-                        }
+//                        for (int i = 0; i< 1000; i++) {
+                        tesForThrowable();
+//                        }
                     }
                 }).start();
             }
@@ -46,23 +46,20 @@ public class SecActivity extends AppCompatActivity {
 
     }
 
-    private void print(int tag) {
+    private void tesForMsg() {
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 100; j++) {
-                LogStorer.w("Log_" + i, "中非合作论坛北京峰会闭幕后----" + j + "");
-            }
-//                        LogStorer.w("FW",i + "");
-        }
-    }
+        int[] array = {1, 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29,20,21
+        ,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40};
 
-    private void testTr() {
-
-        int[] array = {1, 2};
-
-        for (int i = 0; i< 10; i++) {
+        for (int i = 0; i< 40; i++) {
                 try {
-                    LogStorer.w("FW" , array[i] + "");
+                    LogStorer.w("FW"+ i , array[i] + "");
+
+                    for (int j = 0; j < 10000; j++) {
+
+
+                        LogStorer.w("FW"+ i , array[i] + "");
+                    }
                 } catch (OutOfMemoryError e) {
 
                 } catch (ArrayIndexOutOfBoundsException e) {
@@ -71,11 +68,31 @@ public class SecActivity extends AppCompatActivity {
 
                 } catch (Exception e) {
 
+            }
+        }
+    }
 
+    private void tesForThrowable() {
+
+        int[] array = {1, 2,3,4,5,6,7,8,9,10};
+
+        for (int j = 0; j < 10000; j++) {
+            for (int i = 0; i < 11; i++) {
+                try {
+                    LogStorer.w("FW"+ i , j + "");
+
+                } catch (OutOfMemoryError e) {
+
+                } catch (ArrayIndexOutOfBoundsException e) {
+
+                } catch (IndexOutOfBoundsException e) {
+
+                } catch (Exception e) {
+
+                }
             }
         }
 
+
     }
-
-
 }

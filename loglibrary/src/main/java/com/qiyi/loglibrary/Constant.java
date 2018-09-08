@@ -15,19 +15,19 @@ public class Constant {
     public static int INTERVAL_DAY = 2;
 
     //轮询写入时间间隔
-    public static long POLLING_PERIOD = 5 * 1000L;    //30s
+    public static long POLLING_PERIOD = 30 * 1000L;    //30s
 
-    //单个TAG 最大文件大小 100M
+    //日志根目录文件夹大小
     public static int DIR_MAX_FILE = 100 * 1024 * 1024 ;
+
+    //当天tag文件夹最大  5M
+    public static int TAG_MAX_LENGTH = 20 * 1024 * 1024;
 
     //单个文件最大  1M
     public static int SINGLE_FILE_MAX_LENGTH = 1024 * 1024;
 
-    //当天tag文件夹最大  5M
-    public static int TAG_MAX_LENGTH = 3 * 1024 * 1024;
-
     //批量写入条目
-    public static int SINGLE_WIRTING_ITEMS = 20;
+    public static int SINGLE_WIRTING_ITEMS = 40;
 
 
 }

@@ -4,31 +4,33 @@ import com.qiyi.loglibrary.LogStorer;
 import com.qiyi.loglibrary.strategy.LogLevel;
 
 public class LogTask extends AbstractLogTask {
-
-    public LogTask(int logLevel, String moduleName, String msg) {
-        super(logLevel, moduleName, msg);
-    }
-
-    public LogTask(int logLevel, String moduleName, Throwable tr) {
-       super(logLevel, moduleName, tr);
+    //msg 初始化时，做null 保护
+    public LogTask(int logLevel, String moduleName,  String msg, Throwable tr) {
+        super(logLevel, moduleName, msg, tr);
     }
 
     @Override
     protected void doInBackground() {
-        if (tr == null) {
-            if (logLevel == LogLevel.ERROR) {
-                LogStorer.RealW(moduleName, msg);
-            } else if (logLevel == LogLevel.WARN) {
-                LogStorer.RealE(moduleName, msg);
-            }
 
-
-        } else {
-            if (logLevel == LogLevel.ERROR) {
-                LogStorer.RealE(moduleName, tr);
-            } else if (logLevel == LogLevel.WARN) {
-                LogStorer.RealW(moduleName, tr);
-            }
+        switch (logLevel) {
+            case LogLevel.VERBOSE:
+                LogTaskController.v(moduleName, msg, tr);
+                break;
+            case LogLevel.DEBUG:
+                LogTaskController.d(moduleName, msg, tr);
+                break;
+            case LogLevel.INFO:
+                LogTaskController.i(moduleName, msg, tr);
+                break;
+            case LogLevel.WARN:
+                LogTaskController.w(moduleName, msg, tr);
+                break;
+            case LogLevel.ERROR:
+                LogTaskController.e(moduleName, msg, tr);
+                break;
+            default:
+                LogTaskController.v(moduleName, msg, tr);
+                break;
         }
 
     }

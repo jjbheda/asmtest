@@ -56,52 +56,34 @@ public class LogManager {
             logConfigBuilder.moduleName(builder.moduleName);
         }
 
-
-        if (builder.threadSet) {
-            if (builder.withThread) {
-                logConfigBuilder.withTread();
-            } else {
-                logConfigBuilder.withNoThread();
-            }
-        }
-
-        if (builder.stackTraceSet) {
-            if (builder.withStackTrace) {
-                if (builder.stackTraceOrigin != null) {
-                    logConfigBuilder.withExceptionStackTrace(builder.stackTraceOrigin, builder.stackTraceDepth);
-                } else {
-                    logConfigBuilder.withStackTrace(builder.stackTraceDepth);
-                }
-
-            } else {
-                logConfigBuilder.withNoExceptionStackTrace();
-            }
-        }
-
-        if (builder.throwableFormatter != null) {
-            logConfigBuilder.throwableFormatter(builder.throwableFormatter);
-        }
-
-        if (builder.threadFormatter != null) {
-            logConfigBuilder.threadFormatter(builder.threadFormatter);
-        }
-
-        if (builder.stackTraceFormatter != null) {
-            logConfigBuilder.stackTraceFormatter(builder.stackTraceFormatter);
-        }
-
-        if (builder.interceptors != null) {
-            logConfigBuilder.interceptors(builder.interceptors);
-        }
-
         logConfiguration = logConfigBuilder.build();
 
         androidPrinter = new AndroidPrinter();
         filePrinter = new FilePrinter.Builder().logFlattener(new DefaultFlattener()).build();
     }
 
+    public void v(String moduleName, Throwable tr) {
+        println(LogLevel.VERBOSE, moduleName, tr);
+    }
+
+    public void v(String moduleName, String msg) {
+        println(LogLevel.VERBOSE, moduleName, msg);
+    }
+
+    public void d(String moduleName, Throwable tr) {
+        println(LogLevel.DEBUG, moduleName, tr);
+    }
+
     public void d(String moduleName, String msg) {
         println(LogLevel.DEBUG, moduleName, msg);
+    }
+
+    public void i(String moduleName, Throwable tr) {
+        println(LogLevel.INFO, moduleName, tr);
+    }
+
+    public void i(String moduleName, String msg) {
+        println(LogLevel.INFO, moduleName, msg);
     }
 
     public void w(String moduleName, Throwable tr) {
@@ -124,34 +106,6 @@ public class LogManager {
             return;
         }
         printlnInternalWithThrowble(moduleName, logLevel, msg, tr);
-    }
-
-    /**
-     * Print a log in a new line.
-     *
-     * @param logLevel the log level of the printing log
-     * @param msg      the message you would like to log
-     * @param tr       a throwable object to log
-     */
-    private void println(String moduleName, int logLevel, String msg, Throwable tr) {
-        if (logLevel < logConfiguration.logLevel) {
-            return;
-        }
-        printlnInternalWithThrowble(moduleName, logLevel, msg, tr);
-    }
-
-    private void println(String moduleName, int logLevel, String format, Object... args) {
-        if (logLevel < logConfiguration.logLevel) {
-            return;
-        }
-        printlnInternal(logLevel, moduleName, formatArgs(format, args));
-    }
-
-    private void println(String moduleName, int logLevel , String msg) {
-        if (logLevel < logConfiguration.logLevel) {
-            return;
-        }
-        printlnInternal(logLevel, moduleName, msg);
     }
 
     private void println(int logLevel, String moduleName, Throwable e) {
@@ -284,55 +238,10 @@ public class LogManager {
         filePrinter.println(logLevel, moduleName, msg, false);
     }
 
-    private String formatArgs(String format, Object... args) {
-        if (format != null) {
-            return String.format(format, args);
-        } else {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < args.length; i++) {
-                if (i != 0) {
-                    sb.append(", ");
-                }
-                sb.append(args[i]);
-            }
-            return sb.toString();
-        }
-    }
-
     public static class Builder {
         private int logLevel;
         private String tag;
         private String moduleName;
-        private boolean withThread;
-
-        /**
-         * Whether we have enabled/disabled thread info.
-         */
-        private boolean threadSet;
-
-        private boolean withStackTrace;
-
-        /**
-         * The origin of stack trace elements from which we should NOT log when logging with stack trace,
-         * it can be a package name like "com.qiyi.loglibrary", a class name like "com.qiyi.loglibrary.LogStorer",
-         * or something else between package name and class name, like "com.qiyi.".
-         * <p>
-         * It is mostly used when you are using a logger wrapper.
-         */
-        private String stackTraceOrigin;
-
-        private int stackTraceDepth;
-
-        /**
-         * Whether we have enabled/disabled stack trace.
-         */
-        private boolean stackTraceSet;
-
-        private ThrowableFormatter throwableFormatter;
-        private ThreadFormatter threadFormatter;
-        private StackTraceFormatter stackTraceFormatter;
-        private List<Interceptor> interceptors;
-        private Map<Class<?>, ObjectFormatter<?>> objectFormatters;
 
         public Builder() {
             LogStorer.assertInitialized();
@@ -350,74 +259,6 @@ public class LogManager {
 
         public Builder moduleName(String moduleName) {
             this.moduleName = moduleName;
-            return this;
-        }
-
-        public Builder bWithThread() {
-            this.withThread = true;
-            this.threadSet = true;
-            return this;
-        }
-
-        public Builder bWithNoThread() {
-            this.withThread = false;
-            this.threadSet = true;
-            return this;
-        }
-
-        public Builder bWithStackTrace(int depth) {
-            this.withStackTrace = true;
-            this.stackTraceDepth = depth;
-            this.stackTraceSet = true;
-            return this;
-        }
-
-        public Builder bWithStackTrace(String stackTraceOrigin, int depth) {
-            this.withStackTrace = true;
-            this.stackTraceOrigin = stackTraceOrigin;
-            this.stackTraceDepth = depth;
-            this.stackTraceSet = true;
-            return this;
-        }
-
-        public Builder bWithNoStackTrace() {
-            this.withStackTrace = false;
-            this.stackTraceOrigin = null;
-            this.stackTraceDepth = 0;
-            this.stackTraceSet = true;
-            return this;
-        }
-
-        public Builder throwableFormatter(ThrowableFormatter throwableFormatter) {
-            this.throwableFormatter = throwableFormatter;
-            return this;
-        }
-
-        public Builder threadFormatter(ThreadFormatter threadFormatter) {
-            this.threadFormatter = threadFormatter;
-            return this;
-        }
-
-        public Builder stackTraceFormatter(StackTraceFormatter stackTraceFormatter) {
-            this.stackTraceFormatter = stackTraceFormatter;
-            return this;
-        }
-
-        public <T> Builder addObjectFormatter(Class<T> objectClass,
-                                              ObjectFormatter<? super T> objectFormatter) {
-            if (objectFormatters == null) {
-                objectFormatters = new HashMap<>(DefaultsFactory.builtinObjectFormatters());
-            }
-
-            objectFormatters.put(objectClass, objectFormatter);
-            return this;
-        }
-
-        public Builder addInterceptor(Interceptor interceptor) {
-            if (interceptors == null) {
-                interceptors = new ArrayList<>();
-            }
-            interceptors.add(interceptor);
             return this;
         }
 

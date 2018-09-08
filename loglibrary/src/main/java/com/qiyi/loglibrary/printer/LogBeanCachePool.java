@@ -40,7 +40,7 @@ public class LogBeanCachePool {
     public void recordLog(int logLevel, String msg, boolean isThrowable) {
 
         if (!isBaseSizeCheckPass) {
-            Log.e(Constant.ROOT_TAG, "Size 检查不通过，丢弃本次写操作!!!");
+            Log.e(Constant.ROOT_TAG, "基础Size 检查不通过，丢弃本次写操作!!!");
             return;
         }
         addBean(new LogEntity(logLevel, moduleName, msg, isThrowable));

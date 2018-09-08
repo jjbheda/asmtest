@@ -10,19 +10,20 @@ public abstract class AbstractLogTask {
 	int logLevel;
 	String moduleName;
 	Throwable tr;
-	String msg;
+	String msg = "";
 
-	public AbstractLogTask(int logLevel, String moduleName, Throwable tr) {
+	public AbstractLogTask(int logLevel, String moduleName, String msg, Throwable tr) {
 		this.logLevel = logLevel;
 		this.moduleName = moduleName;
 		this.tr = tr;
+		this.msg = (msg == null ? "" : msg);
 	}
 
-	public AbstractLogTask(int logLevel, String moduleName, String msg) {
-		this.logLevel = logLevel;
-		this.moduleName = moduleName;
-		this.msg = msg;
-	}
+//	public AbstractLogTask(int logLevel, String moduleName, String msg) {
+//		this.logLevel = logLevel;
+//		this.moduleName = moduleName;
+//		this.msg = msg;
+//	}
 
 
 	/**
