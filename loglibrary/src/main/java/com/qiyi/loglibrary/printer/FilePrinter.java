@@ -2,6 +2,7 @@ package com.qiyi.loglibrary.printer;
 
 import android.util.Log;
 
+import com.qiyi.loglibrary.Constant;
 import com.qiyi.loglibrary.flattener.Flattener;
 import com.qiyi.loglibrary.printer.backup.BackupStrategy;
 import com.qiyi.loglibrary.printer.naming.FileNameGenerator;
@@ -38,21 +39,30 @@ public class FilePrinter implements Printer {
             cacheMap.put(mouduleName,cacheLogpool);
         }
         LogBeanCachePool cacheLogpool = cacheMap.get(mouduleName);
-        cacheLogpool.recordLog(logLevel, msg);
+        cacheLogpool.recordLog(logLevel, msg, isThrowable);
     }
 
     @Override
     public void println() {
         Iterator iter = cacheMap.entrySet().iterator();
+        Log.e(Constant.ROOT_TAG, "轮询进入FilePrinter");
         while (iter.hasNext()) {
+            Log.e(Constant.ROOT_TAG, "轮询进入hasNext");
             Map.Entry entry = (Map.Entry) iter.next();
+            Log.e(Constant.ROOT_TAG, "轮询进入Next");
             LogBeanCachePool cacheLogBeanPool = (LogBeanCachePool)entry.getValue();
+            Log.e(Constant.ROOT_TAG, "轮询cacheLogBeanPool");
             if (cacheLogBeanPool.getBeanArray().size() == 0) {
-                Log.e(TAG, "本次轮询未发现要写入的文件");
+                Log.e(Constant.ROOT_TAG, "本次轮询未发现要写入的文件");
                 return;
             }
-            cacheLogBeanPool.pushToThreadPool(true);
-//            LogSaveThreadPoolExecutor.LOG_SAVE_THREAD_POOL.submit(new Recorder(cacheLogBeanPool, true));
+            Log.e(Constant.ROOT_TAG, "本次轮询尝试去写入文件。。。。。。。");
+            if (cacheLogBeanPool.countDownLatch.getCount() == 1) {
+                Log.e(Constant.ROOT_TAG, "本次轮询发现文件还在写入中.......");
+            } else {
+                Log.e(Constant.ROOT_TAG, "本次轮询发现文件，并且调用写入操作");
+                cacheLogBeanPool.pushToThreadPool(true);
+            }
         }
     }
 

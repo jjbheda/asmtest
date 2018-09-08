@@ -175,6 +175,11 @@ public class PatternFlattener implements Flattener {
   }
 
   @Override
+  public CharSequence flattenWithoutTime(int logLevel, String tag, String message) {
+    return null;
+  }
+
+  @Override
   public CharSequence flatten(String time, int logLevel, String tag, String message) {
     return flatten(logLevel, tag, message);
 

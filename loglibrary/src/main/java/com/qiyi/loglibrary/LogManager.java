@@ -36,11 +36,11 @@ public class LogManager {
     public LogManager(LogConfiguration logConfiguration) {
         this.logConfiguration = logConfiguration;
         androidPrinter = new AndroidPrinter();
+        EventBus.getDefault().register(this);
         filePrinter = new FilePrinter.Builder().logFlattener(new DefaultFlattener()).build();
     }
 
     public LogManager(Builder builder) {
-        EventBus.getDefault().register(this);
         LogConfiguration.Builder logConfigBuilder = new LogConfiguration.
                 Builder(LogStorer.mLogConfiguration);
 
@@ -112,6 +112,9 @@ public class LogManager {
         println(LogLevel.WARN, moduleName, msg);
     }
 
+    public void e(String moduleName, Throwable tr) {
+        println(LogLevel.ERROR, moduleName, tr);
+    }
     public void e(String moduleName, String msg) {
         println(LogLevel.ERROR, moduleName, msg);
     }

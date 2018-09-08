@@ -26,25 +26,14 @@ public class SecActivity extends AppCompatActivity {
         btn_sec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                try {
-//                    int[] array = {1, 2, 3, 4, 5};
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                               print(6);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i< 100; i++) {
+                            testTr();
                         }
-                    }).start();
-
-                } catch (OutOfMemoryError e) {
-
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    LogStorer.w("FW", e);
-                } catch (IndexOutOfBoundsException e) {
-
-                } catch (Exception e) {
-
-                }
+                    }
+                }).start();
             }
         });
 
@@ -55,17 +44,38 @@ public class SecActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void print(int tag) {
 
         for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 100 ;j++) {
-                LogStorer.w("Log_" + i, "中非合作论坛北京峰会闭幕后----" +  j + "");
+            for (int j = 0; j < 100; j++) {
+                LogStorer.w("Log_" + i, "中非合作论坛北京峰会闭幕后----" + j + "");
             }
 //                        LogStorer.w("FW",i + "");
         }
     }
+
+    private void testTr() {
+
+        int[] array = {1, 2};
+
+        for (int i = 0; i< 10; i++) {
+                try {
+                    LogStorer.w("FW" , array[i] + "");
+                } catch (OutOfMemoryError e) {
+
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    LogStorer.w("FW", e);
+                } catch (IndexOutOfBoundsException e) {
+
+                } catch (Exception e) {
+
+
+            }
+        }
+
+    }
+
 
 }

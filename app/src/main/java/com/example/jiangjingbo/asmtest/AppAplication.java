@@ -3,6 +3,7 @@ package com.example.jiangjingbo.asmtest;
 import android.app.Application;
 import android.content.Context;
 
+import com.qiyi.loglibrary.Constant;
 import com.qiyi.loglibrary.LogConfiguration;
 import com.qiyi.loglibrary.LogStorer;
 import com.qiyi.loglibrary.printer.AndroidPrinter;
@@ -20,6 +21,7 @@ public class AppAplication extends Application {
     }
 
     private void initLogStorer() {
+
         LogConfiguration configuration = new LogConfiguration.Builder()
                 .logLevel(BuildConfig.DEBUG ? LogLevel.ALL : LogLevel.WARN)
                 .withTread()
@@ -27,6 +29,7 @@ public class AppAplication extends Application {
                 .build();
 
         LogStorer.init(context, configuration);
+
     }
 
 }

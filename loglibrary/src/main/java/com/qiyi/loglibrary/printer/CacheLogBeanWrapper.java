@@ -10,7 +10,6 @@ public class CacheLogBeanWrapper extends LogEntity {
     private String time;
     private Flattener flattener;
 
-
     public String getTime() {
         return time;
     }
@@ -24,15 +23,15 @@ public class CacheLogBeanWrapper extends LogEntity {
     }
 
     public String getCheckFlatterMsg() {
-        return flattener.flatten(level, moduleName, msg).toString() + "\n";
+        return flattener.flattenWithoutTime(level, moduleName, msg).toString() + "\n";
     }
 
     public CacheLogBeanWrapper(int level, String tag, String msg, String threadInfo, String stackTraceInfo) {
         super(level, tag, msg, threadInfo, stackTraceInfo);
     }
 
-    public CacheLogBeanWrapper(int level, String tag, String msg, Flattener flattener) {
-        super(level, tag, msg);
+    public CacheLogBeanWrapper(int level, String tag, String msg, boolean isThrowable, Flattener flattener) {
+        super(level, tag, msg, isThrowable);
         this.flattener = flattener;
     }
 

@@ -11,10 +11,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-/**
- * Created by huangxiaolong on 2017/7/17.
- */
-
 public class LogDateUtils {
     public static final int SECONDS_IN_DAY = 60 * 60 * 24;
     public static final long MILLIS_IN_DAY = 1000L * SECONDS_IN_DAY;
@@ -66,13 +62,11 @@ public class LogDateUtils {
      * @param intervalDay 默认的超时间隔天数
      * @return
      */
-
     public static boolean isOverTime(Date date1, Date date2, int intervalDay) {
         final long interval = date1.getTime() - date2.getTime();
         return interval > MILLIS_IN_DAY * intervalDay;
 
     }
-
 
     public static long ParseDate(String fileName , String pattern) {
         Calendar calendar = Calendar.getInstance();

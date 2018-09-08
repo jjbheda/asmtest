@@ -19,4 +19,10 @@ public class DefaultFlattener implements Flattener {
                 + '|' + tag
                 + '|' + message;
     }
+
+    public CharSequence flattenWithoutTime(int logLevel, String tag, String message) {
+        return  '|' + LogLevel.getShortLevelName(logLevel)
+                + '|' + tag
+                + '|' + message;
+    }
 }

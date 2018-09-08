@@ -27,12 +27,11 @@ public class PollingTimerUtil {
     }
 
    static class PollingTimer extends TimerTask {
-
         @Override
         public void run() {
             Log.e("PollingTimerUtil" , "轮询时间到了");
             Constant.IS_POLLING_TIME = true;
-            EventBus.getDefault().post(new LogEntity(2, "", ""));
+            EventBus.getDefault().post(new LogEntity(2, "", "", false));
         }
     }
 
@@ -40,6 +39,4 @@ public class PollingTimerUtil {
         Log.e("PollingTimerUtil" , "结束轮询启动");
         EventBus.getDefault().unregister(this);
     }
-
-
 }
