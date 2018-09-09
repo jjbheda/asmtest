@@ -249,6 +249,60 @@ public class FileUtils {
     }
 
 
+    public static boolean string2File2(String res, String filePath, boolean append) {
+        boolean flag = true;
+        BufferedReader bufferedReader = null;
+        BufferedWriter bufferedWriter = null;
+
+        if (res == null) {
+            return false;
+        }
+
+        ReentrantReadWriteLock lock = createOrGetLock(filePath);
+
+        FileWriter fileWriter = null;
+        try {
+
+            lock.writeLock().lock();
+
+            File distFile = new File(filePath);
+            if (!distFile.getParentFile().exists()) {
+                distFile.getParentFile().mkdirs();
+            }
+            if (!distFile.exists()) {
+                boolean createFile = distFile.createNewFile();
+            }
+            fileWriter = new FileWriter(distFile, append);
+            bufferedReader = new BufferedReader(new StringReader(res));
+            bufferedWriter = new BufferedWriter(fileWriter);
+            char buf[] = new char[1024 * 4]; // 字符缓冲区
+            int len;
+            while ((len = bufferedReader.read(buf)) != -1) {
+                bufferedWriter.write(buf, 0, len);
+            }
+            bufferedWriter.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+            flag = false;
+        } finally {
+            if (bufferedReader != null) {
+                silentlyCloseCloseable(bufferedReader);
+            }
+            if (bufferedWriter != null) {
+                silentlyCloseCloseable(bufferedWriter);
+            }
+            if (fileWriter != null) {
+                silentlyCloseCloseable(fileWriter);
+            }
+
+//            lock.writeLock().unlock();
+//            tryToRemoveLock(filePath);
+        }
+
+        return flag;
+    }
+
+
     /**
      * Get or create ReentrantReadWriteLock for given file path
      *

@@ -11,7 +11,7 @@ import java.io.File;
 public class LogUpload {
 
     public static void getLog(String moudleName, String date) {
-        LogSaveThreadPoolExecutor.THREAD_POOL_EXECUTOR.submit(new Reader(moudleName, date));
+//        LogSaveThreadPoolExecutor.LOG_SAVE_THREAD_POOL.submit(new Reader(moudleName, date));
     }
 
     private static class Reader implements Runnable {

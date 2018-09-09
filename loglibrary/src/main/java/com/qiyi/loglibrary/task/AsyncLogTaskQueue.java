@@ -1,5 +1,7 @@
 package com.qiyi.loglibrary.task;
 
+import android.util.Log;
+
 import com.qiyi.loglibrary.util.ExceptionUtils;
 
 import java.util.LinkedList;
@@ -29,6 +31,9 @@ public class AsyncLogTaskQueue extends Thread {
                         continue;
                     } else {
                         task = taskQueue.poll();
+                        Thread trd = Thread.currentThread();
+//                        Log.e("LogBeanCachePool","当前线程 取出" + task.moduleName +"  "  + task.msg +
+//                                "》》》》》》》》----------" + trd.getId() + " " + trd.getId());
                     }
                 }
                 task.process();
@@ -53,6 +58,8 @@ public class AsyncLogTaskQueue extends Thread {
      */
     public void addTask(AbstractLogTask task) {
         synchronized (taskQueue) {
+            Thread trd = Thread.currentThread();
+            Log.e("LogBeanCachePool","添加task,"+task.moduleName + "---------------------------- 当前线程->" + trd.getId());
             taskQueue.offer(task);
             taskQueue.notifyAll();
         }

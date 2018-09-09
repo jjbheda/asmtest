@@ -17,12 +17,18 @@ import com.qiyi.loglibrary.util.TimeUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LogBeanCachePool {
-//    private boolean writtingFlag = false;
+    private boolean writtingFlag = false;
     private String filePath;
     private Flattener flattener;
     private String moduleName;
@@ -31,7 +37,7 @@ public class LogBeanCachePool {
     public CountDownLatch countDownLatch = new CountDownLatch(1);
 
     private Object lock = new Object();
-
+    private int index = 0;
     public LogBeanCachePool(Flattener flattener, String moduleName) {
         this.flattener = flattener;
         this.moduleName = moduleName;
@@ -51,24 +57,72 @@ public class LogBeanCachePool {
             return;
         }
 
-        pushToThreadPool(false);
+        Future<Boolean> future = LogSaveThreadPoolExecutor.LOG_SAVE_THREAD_POOL.submit(new Caller());
 
         try {
-            Log.e(Constant.ROOT_TAG, "执行等待........");
-            countDownLatch.await();
-        } catch (InterruptedException e) {
+            future.get(3, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(Constant.ROOT_TAG, "TimeoutException准备移除task" + e);
+        } catch (Exception e) {
             e.printStackTrace();
+            Log.e(Constant.ROOT_TAG, "Exception准备移除task" + e.getMessage());
+        } finally {
+            reset();
+//            Log.e(Constant.ROOT_TAG, "本次执行完成");
         }
 
-        countDownLatch = new CountDownLatch(1);
-
     }
+
+      class Caller implements Callable<Boolean> {
+//        Recorder recorder;
+//        Caller(Recorder recorder) {
+//            this.recorder = recorder;
+//        }
+        @Override
+        public Boolean call() throws Exception{
+            try {
+                index ++;
+                String msg = getLogMsg();
+//
+                if (index == 3) {
+//                    for (int i=0; i<10; i++) {
+                    Log.e(Constant.ROOT_TAG, "当前线程，，，，，，，锁定30s");
+                    Thread.sleep(30000);
+                    Log.e(Constant.ROOT_TAG, "当前线程，，，，，，，拟打印数据" + msg);
+//                    }
+                } else {
+                    Log.e(Constant.ROOT_TAG, "当前线程，，，，，，，确确实实打印数据" + msg);
+                }
+                printToFile(getFilePath(), msg);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+    }
+
 
     /**
      * @param isPolling  是否是轮询写入
      */
     public void pushToThreadPool(boolean isPolling) {
-        LogSaveThreadPoolExecutor.THREAD_POOL_EXECUTOR.submit(new Recorder(isPolling));
+
+//       LogSaveThreadPoolExecutor.LOG_SAVE_THREAD_POOL.submit(new Recorder(false));
+//        try {
+//            future.get(2, TimeUnit.SECONDS);
+//        } catch (TimeoutException e) {
+//            Log.e(Constant.ROOT_TAG, "当前线程，，，，，，，TimeoutException准备移除task，，，，，，，，，，，" + e.getMessage());
+//            LogSaveThreadPoolExecutor.LOG_SAVE_THREAD_POOL.remove(recorder);
+//            System.out.println("timeout");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            LogSaveThreadPoolExecutor.LOG_SAVE_THREAD_POOL.remove(recorder);
+//            Log.e(Constant.ROOT_TAG, "当前线程，，，，，，Exception 移除task，，，，，，，，，，，，" + e.getStackTrace());
+//        } finally {
+////            Log.e(Constant.ROOT_TAG, "当前线程，，，，，，移除task，，，，，，，，，，，，");
+//        }
     }
 
     public synchronized Vector<CacheLogBeanWrapper> getBeanArray() {
@@ -97,117 +151,88 @@ public class LogBeanCachePool {
         return filePath;
     }
 
-//    public synchronized void setIsWritting(boolean writtingFlag) {
-//        synchronized (lock) {
-//            this.writtingFlag = writtingFlag;
-//        }
-//
-//    }
-
-//    public  synchronized boolean isWritting() {
-//        synchronized (lock) {
-//            return writtingFlag;
-//        }
-//    }
-
-    private class Recorder implements Runnable {
-        String logMsg;
-        boolean isPolling; //是否是轮询写入
-        Recorder(boolean isPolling) {
-            this.isPolling = isPolling;
+    public synchronized void setIsWritting(boolean writtingFlag) {
+        synchronized (lock) {
+            this.writtingFlag = writtingFlag;
         }
 
-        @Override
-        public void run() {
-            try {
-                if (!FileChecker.baseSizeCheck(moduleName)) {
-                    isBaseSizeCheckPass = false;
-                    Log.e(Constant.ROOT_TAG,"isBaseSizeCheckPass == false");
-                    reset();
-                    return;
-                }
+    }
 
-//                if (isWritting()) {
-//                    Log.e(Constant.ROOT_TAG,moduleName + "正在写入");
-//                    return;
-//                }
-
-                if(!"".equals(getLogMsg())) {
-//                    setIsWritting(true);
-                    printToFile(getFilePath(), logMsg);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-//                countDownLatch.countDown();
-            }
+    public  synchronized boolean isWritting() {
+        synchronized (lock) {
+            return writtingFlag;
         }
+    }
 
-        String getLogMsg() {
-            StringBuilder sb = new StringBuilder();
-            Vector<String> throwableBeanArray = new Vector<>();
+    String getLogMsg() {
+        StringBuilder sb = new StringBuilder();
 
-            for (CacheLogBeanWrapper logEntity : beanArray) {
+         String logMsg = "";
+        Vector<String> throwableBeanArray = new Vector<>();
 
-                if (logEntity.isThrowable) {
-                    String msg = logEntity.getCheckFlatterMsg();
-                    if (!throwableBeanArray.contains(msg)) {
-                        throwableBeanArray.add(msg);
-                        sb.append(logEntity.getFlatterMsg());
-                    }
+        for (CacheLogBeanWrapper logEntity : beanArray) {
 
-                } else {
+            if (logEntity.isThrowable) {
+                String msg = logEntity.getCheckFlatterMsg();
+                if (!throwableBeanArray.contains(msg)) {
+                    throwableBeanArray.add(msg);
                     sb.append(logEntity.getFlatterMsg());
                 }
 
-            }
-            File file = FileChecker.getFile(moduleName, sb.toString().length());
-            if (file == null) {
-                Log.e(Constant.ROOT_TAG, "获取写文件位置失败，丢弃本次写操作!!！");
-                reset();
-                return "";
+            } else {
+                sb.append(logEntity.getFlatterMsg());
             }
 
-            setFilePath(file.getAbsolutePath());
-
-            logMsg = sb.toString();
-
-//            if (logMsg.equals("")) {
-//                Log.e(Constant.ROOT_TAG, "本次写入数据为空!!!");
-//                reset();
-//                return "";
-//            }
-            if (!FileChecker.check(moduleName, LogStorer.mBaseContext,logMsg.length())) {
-                Log.e(Constant.ROOT_TAG, "写入检查不通过，丢弃本次写操作!!!");
-                reset();
-                return "";
-            }
-            Log.e(Constant.ROOT_TAG, Constant.ROOT_TAG +"开始写入，路径" + file.getAbsolutePath() + ", 写入内容" + logMsg);
-            return logMsg;
         }
-
-        void printToFile(String file, String logMsg) {
-            if (file == null) {
-                Log.e(Constant.ROOT_TAG,moduleName + "写入文件发生异常");
-                reset();
-                return;
-            }
-            boolean canWrite = FileChecker.checkFile(new File(file).getAbsolutePath(), logMsg.length());
-            if (!canWrite) {
-                Log.e(Constant.ROOT_TAG, Constant.ROOT_TAG +"检查不能写入");
-                reset();
-                return;
-            }
-            FileUtils.string2File(logMsg, file, true);
+        File file = FileChecker.getFile(moduleName, sb.toString().length());
+        if (file == null) {
+            Log.e(Constant.ROOT_TAG, "获取写文件位置失败，丢弃本次写操作!!！");
             reset();
+            return "";
         }
+
+        setFilePath(file.getAbsolutePath());
+
+        logMsg = sb.toString();
+
+            if (logMsg.equals("")) {
+                Log.e(Constant.ROOT_TAG, "本次写入数据为空!!!");
+                reset();
+                return "";
+            }
+
+        if (!FileChecker.check(moduleName, LogStorer.mBaseContext,logMsg.length())) {
+            Log.e(Constant.ROOT_TAG, "写入检查不通过，丢弃本次写操作!!!");
+            reset();
+            return "";
+        }
+        Log.e(Constant.ROOT_TAG, Constant.ROOT_TAG +"当前线程,开始写入，路径" + file.getAbsolutePath() + ", 写入内容" + logMsg);
+        return logMsg;
+    }
+
+    private void printToFile(String file, String logMsg) {
+        if (file == null) {
+            Log.e(Constant.ROOT_TAG,moduleName + "写入文件发生异常");
+            reset();
+            return;
+        }
+        boolean canWrite = FileChecker.checkFile(new File(file).getAbsolutePath(), logMsg.length());
+        if (!canWrite) {
+            Log.e(Constant.ROOT_TAG, Constant.ROOT_TAG +"检查不能写入");
+            reset();
+            return;
+        }
+
+        FileUtils.string2File(logMsg, file, true);
+        reset();
+
     }
 
     private void reset() {
         Constant.IS_POLLING_TIME = false;
         clear();
-        countDownLatch.countDown();
-//        setIsWritting(false);
+//        countDownLatch.countDown();
+        setIsWritting(false);
     }
 
 }

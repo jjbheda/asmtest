@@ -34,6 +34,8 @@ public class SecActivity extends AppCompatActivity {
 //                        }
                     }
                 }).start();
+
+//                tesForThrowable();
             }
         });
 
@@ -80,7 +82,7 @@ public class SecActivity extends AppCompatActivity {
             for (int i = 0; i < 11; i++) {
                 try {
                     LogStorer.w("FW"+ i , j + "");
-
+//                    LogStorer.w("FW" ,   "写入" + i);
                 } catch (OutOfMemoryError e) {
 
                 } catch (ArrayIndexOutOfBoundsException e) {

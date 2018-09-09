@@ -15,7 +15,7 @@ public class Constant {
     public static int INTERVAL_DAY = 2;
 
     //轮询写入时间间隔
-    public static long POLLING_PERIOD = 30 * 1000L;    //30s
+    public static long POLLING_PERIOD = 200 * 1000L;    //30s
 
     //日志根目录文件夹大小
     public static int DIR_MAX_FILE = 100 * 1024 * 1024 ;
