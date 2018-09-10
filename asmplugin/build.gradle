@@ -1,30 +1,7 @@
 apply plugin: 'groovy'
-apply plugin: 'maven'
-
-
 
 dependencies {
     compileOnly gradleApi()
     compileOnly localGroovy()
     compileOnly 'com.android.tools.build:gradle:3.1.2'
-}
-
-afterEvaluate { project->
-    uploadArchives {
-        repositories{
-            mavenDeployer {
-                repository(url: uri('../repo'))
-                pom.groupId = "com.asm.test"
-                pom.artifactId = "logcolletor"
-                pom.version = "1.0.0"
-            }
-        }
-    }
-}
-
-task buildJar(type: Jar, dependsOn: ['build']) {
-    archiveName = "logcolletor.jar"
-    from('build/classes/groovy/main')
-    destinationDir = file("${project(':asmplugin').projectDir}/libs")
-//    include('com/asm/test/*.class')
 }

@@ -10,7 +10,6 @@ class LogCollecter implements Plugin<Project> {
 
         project.tasks.all { task ->
             TaskHooker contextProvider
-            println 'task ---' + task.name
 
             if (task.name.startsWith("compileReleaseJavaWithJavac")) {
                  contextProvider = new TaskHooker(project, 'Release')

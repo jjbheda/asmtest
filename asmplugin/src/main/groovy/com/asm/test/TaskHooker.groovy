@@ -48,9 +48,6 @@ class TaskHooker {
                 if (!fileName.startsWith("R\$") &&
                         !"R.class".equals(fileName) && !"BuildConfig.class".equals(fileName)
                         && file.getAbsolutePath().endsWith(".class")) {
-                    println 'file.getParent()-----' + file.getParent()
-                    println "FILE: ${file.getCanonicalPath()}"
-                    println "file.getAbsolutePath(): ${file.getAbsolutePath()}"
 
                     for (String packageName : packageNameList) {
                         if (file.getParent().endsWith(packageName)) {
@@ -58,7 +55,6 @@ class TaskHooker {
                             ExceptionInjectUtil.processClass(file)
                         }
                     }
-
                 }
             } else if (file.isDirectory()) {
 //                 println "DIR:  ${file}"

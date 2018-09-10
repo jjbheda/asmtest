@@ -11,7 +11,6 @@ import org.objectweb.asm.commons.AdviceAdapter;
 
  class ExceptionInjectUtil {
      static void processClass(File file) {
-        println "start process class " + file.getPath()
         File optClass = new File(file.getParent(), file.getName() + ".opt");
         FileInputStream inputStream = null;
         FileOutputStream outputStream = null;
@@ -64,26 +63,22 @@ import org.objectweb.asm.commons.AdviceAdapter;
 
          ChangeVisitor(ClassVisitor cv) {
             super(Opcodes.ASM5, cv);
-            println "ChangeVisitor: created!!!"
         }
 
         @Override
-        public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-            println 'ClassVisitor ----------------->' + name
+         void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
             super.visit(version, access, name, signature, superName, interfaces);
         }
 
         @Override
-        public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+         MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
             MethodVisitor mv = this.cv.visitMethod(access, name, desc, signature, exceptions);
-            println 'visitMethod ----------------->' + name
             return new RedefineAdvice(mv, access, name, desc);
 
         }
     }
 
      static class RedefineAdvice extends AdviceAdapter {
-
         private HashMap<Label, String> matchedHandle = new HashMap<>();
         String owner = ""
         protected RedefineAdvice(MethodVisitor mv, int access, String name, String desc) {
@@ -93,38 +88,30 @@ import org.objectweb.asm.commons.AdviceAdapter;
 
         @Override
          void visitTryCatchBlock(Label start, Label end, Label handle, String type) {
-            println '进入try catch 块!!!'
-//            //目标exception，可能有多个
-            println "type --------" + (type == null ? "null" : "nonull，") + type
+
             if (type != null) {
                 String exception = matchedHandle.get(handle);
 
-                println "handles --------" + (exception == null ? "handles = null" : "handles = nonull")
                 if(exception == null) {
-                    exception = type;
+                    exception = type
                 }
                 matchedHandle.put(handle, exception);
             }
-            println "matchedHandle  --- >" + matchedHandle
             super.visitTryCatchBlock(start, end, handle, type)
-
         }
 
         @Override
         void visitLabel(Label label) {
             super.visitLabel(label)
-            println "visitLabel  ---- matchedHandle  --- >" + matchedHandle
             if (label != null && (matchedHandle.get(label)) != null) {
-                println " matchedHandle.get(label) isnot null  --- >"
                 Label matched = new Label();
-                Label end = new Label();
-                visitLabel(matched);
+                Label end = new Label()
+                visitLabel(matched)
                 dup();
                 //调用pushException方法
-                println "调用pushException方法  --- > ,当前name------->" + owner
                 mv.visitMethodInsn(INVOKESTATIC, "com/qiyi/loglibrary/LogStorer",
-                        "e", "(Ljava/lang/Throwable;)V", false);
-                visitLabel(end);
+                        "e", "(Ljava/lang/Throwable;)V", false)
+                visitLabel(end)
             }
         }
     }
