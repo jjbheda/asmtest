@@ -14,7 +14,7 @@ import com.qiyi.loglibrary.upload.LogUpload;
 public class SecActivity extends AppCompatActivity {
 
     public static final String TAG = "SecActivity";
-    Button btn_sec, btn_upload;
+    Button btn_sec, btn_tr, btn_upload;
     int i = 0;
 
     @Override
@@ -23,19 +23,30 @@ public class SecActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sec);
         btn_sec = findViewById(R.id.btn_sec);
         btn_upload = findViewById(R.id.btn_upload);
+        btn_tr = findViewById(R.id.btn_tr);
         btn_sec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-//                        for (int i = 0; i< 1000; i++) {
-                        tesForThrowable();
-//                        }
+                        tesForCommonLog();
                     }
                 }).start();
+            }
+        });
 
-//                tesForThrowable();
+        btn_tr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                       tesForMsg();
+                    }
+                },"Passport").start();
+
             }
         });
 
@@ -45,27 +56,22 @@ public class SecActivity extends AppCompatActivity {
                 LogUpload.getLog("log_0", "2018-09-06");
             }
         });
-
     }
 
     private void tesForMsg() {
 
-        int[] array = {1, 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29,20,21
-        ,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40};
+        int[] array = {1, 2};
 
-        for (int i = 0; i< 40; i++) {
+        for (int i = 0; i< 100; i++) {
                 try {
-                    LogStorer.w("FW"+ i , array[i] + "");
-
-                    for (int j = 0; j < 10000; j++) {
-
-
-                        LogStorer.w("FW"+ i , array[i] + "");
+//                    LogStorer.w("Passport"+ i , array[i] + "");
+                    for (int j = 0; j < 3; j++) {
+                        Log.w("Passport", array[i] + "");
                     }
                 } catch (OutOfMemoryError e) {
 
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    LogStorer.w("FW", e);
+//                    LogStorer.w("Passport", e);
                 } catch (IndexOutOfBoundsException e) {
 
                 } catch (Exception e) {
@@ -74,15 +80,12 @@ public class SecActivity extends AppCompatActivity {
         }
     }
 
-    private void tesForThrowable() {
-
-        int[] array = {1, 2,3,4,5,6,7,8,9,10};
+    private void tesForCommonLog() {
 
         for (int j = 0; j < 10000; j++) {
             for (int i = 0; i < 11; i++) {
                 try {
-                    LogStorer.w("FW"+ i , j + "");
-//                    LogStorer.w("FW" ,   "写入" + i);
+                    Log.w("FW"+ i , j + "");
                 } catch (OutOfMemoryError e) {
 
                 } catch (ArrayIndexOutOfBoundsException e) {

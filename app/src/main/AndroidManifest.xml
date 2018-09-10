@@ -18,6 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.jiangjingbo.sec.SecActivity"/>
+        <activity android:name="com.example.jiangjingbo.third.ThirdActivity"/>
     </application>
 
 </manifest>

@@ -6,8 +6,6 @@ public class Constant {
 
     public static String  ROOT_TAG = "LogStorer";
 
-    public static String  ROOT_THREAD_NAME = "LogStorerThread";
-
     //是否正在轮询
     public static boolean IS_POLLING_TIME = false;
 
@@ -15,7 +13,10 @@ public class Constant {
     public static int INTERVAL_DAY = 2;
 
     //轮询写入时间间隔
-    public static long POLLING_PERIOD = 200 * 1000L;    //30s
+    public static long POLLING_PERIOD = 60 * 1000L;    //60s
+
+    //日志批量写入（SINGLE_WIRTING_ITEMS）时，超时时间，单位s
+    public static long LOG_PATCH_TASK_TIMEOUT = 10;    //10s
 
     //日志根目录文件夹大小
     public static int DIR_MAX_FILE = 100 * 1024 * 1024 ;
@@ -28,6 +29,5 @@ public class Constant {
 
     //批量写入条目
     public static int SINGLE_WIRTING_ITEMS = 40;
-
 
 }

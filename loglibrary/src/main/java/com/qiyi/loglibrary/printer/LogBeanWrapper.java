@@ -5,7 +5,7 @@ import com.qiyi.loglibrary.flattener.Flattener;
 
 import java.util.concurrent.CountDownLatch;
 
-public class CacheLogBeanWrapper extends LogEntity {
+public class LogBeanWrapper extends LogEntity {
 
     private String time;
     private Flattener flattener;
@@ -26,11 +26,11 @@ public class CacheLogBeanWrapper extends LogEntity {
         return flattener.flattenWithoutTime(level, moduleName, msg).toString() + "\n";
     }
 
-    public CacheLogBeanWrapper(int level, String tag, String msg, String threadInfo, String stackTraceInfo) {
+    public LogBeanWrapper(int level, String tag, String msg, String threadInfo, String stackTraceInfo) {
         super(level, tag, msg, threadInfo, stackTraceInfo);
     }
 
-    public CacheLogBeanWrapper(int level, String tag, String msg, boolean isThrowable, Flattener flattener) {
+    public LogBeanWrapper(int level, String tag, String msg, boolean isThrowable, Flattener flattener) {
         super(level, tag, msg, isThrowable);
         this.flattener = flattener;
     }

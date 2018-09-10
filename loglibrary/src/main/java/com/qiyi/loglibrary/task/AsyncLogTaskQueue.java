@@ -6,6 +6,7 @@ import com.qiyi.loglibrary.util.ExceptionUtils;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
@@ -13,11 +14,11 @@ import java.util.Queue;
  *
  */
 public class AsyncLogTaskQueue extends Thread {
-    private Queue<AbstractLogTask> taskQueue = new LinkedList<AbstractLogTask>();
+    private Queue<AbstractLogTask> taskQueue = new ConcurrentLinkedQueue<AbstractLogTask>();
     private boolean isStop = false;
 
     public AsyncLogTaskQueue() {
-        super("AsyncDBTaskQueue");
+        super("PassPort");
     }
 
     @Override
@@ -31,9 +32,6 @@ public class AsyncLogTaskQueue extends Thread {
                         continue;
                     } else {
                         task = taskQueue.poll();
-                        Thread trd = Thread.currentThread();
-//                        Log.e("LogBeanCachePool","当前线程 取出" + task.moduleName +"  "  + task.msg +
-//                                "》》》》》》》》----------" + trd.getId() + " " + trd.getId());
                     }
                 }
                 task.process();
@@ -58,8 +56,6 @@ public class AsyncLogTaskQueue extends Thread {
      */
     public void addTask(AbstractLogTask task) {
         synchronized (taskQueue) {
-            Thread trd = Thread.currentThread();
-            Log.e("LogBeanCachePool","添加task,"+task.moduleName + "---------------------------- 当前线程->" + trd.getId());
             taskQueue.offer(task);
             taskQueue.notifyAll();
         }

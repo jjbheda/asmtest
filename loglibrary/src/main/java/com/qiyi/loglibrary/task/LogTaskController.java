@@ -45,39 +45,39 @@ public class LogTaskController {
 		}
 	}
 
-	public static void v(String moduleName, String msg, Throwable tr) {
+	public static void v(String moduleName, String msg, Throwable tr,String threadInfo) {
 		if (tr == null)
-			logManager.v(moduleName, msg);
+			logManager.v(moduleName, msg, threadInfo);
 		else
-			logManager.v(moduleName, tr);
+			logManager.v(moduleName, tr, threadInfo);
 	}
 
-	public static void d(String moduleName, String msg, Throwable tr) {
+	public static void d(String moduleName, String msg, Throwable tr,String threadInfo) {
 		if (tr == null)
-			logManager.d(moduleName, msg);
+			logManager.d(moduleName, msg, threadInfo);
 		else
-			logManager.d(moduleName, tr);
+			logManager.d(moduleName, tr, threadInfo);
 	}
 
-	public static void i(String moduleName, String msg, Throwable tr) {
+	public static void i(String moduleName, String msg, Throwable tr,String threadInfo) {
 		if (tr == null)
-			logManager.i(moduleName, msg);
+			logManager.i(moduleName, msg, threadInfo);
 		else
-			logManager.i(moduleName, tr);
+			logManager.i(moduleName, tr, threadInfo);
 	}
 
-	public static void w(String moduleName, String msg, Throwable tr) {
+	public static void w(String moduleName, String msg, Throwable tr,String threadInfo) {
 		if (tr == null)
-			logManager.w(moduleName, msg);
+			logManager.w(moduleName, msg, threadInfo);
 		else
-			logManager.w(moduleName, tr);
+			logManager.w(moduleName, tr, threadInfo);
 	}
 
-	public static void e(String moduleName, String msg, Throwable tr) {
+	public static void e(String moduleName, String msg, Throwable tr,String threadInfo) {
 		if (tr == null)
-			logManager.e(moduleName, msg);
+			logManager.e(moduleName, msg, threadInfo);
 		else
-			logManager.e(moduleName, tr);
+			logManager.e(moduleName, tr, threadInfo);
 	}
 
 }

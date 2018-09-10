@@ -11,8 +11,6 @@ import com.qiyi.loglibrary.formatter.object.IntentFormatter;
 import com.qiyi.loglibrary.formatter.object.ObjectFormatter;
 import com.qiyi.loglibrary.formatter.stacktrace.DefaultStackTraceFormatter;
 import com.qiyi.loglibrary.formatter.stacktrace.StackTraceFormatter;
-import com.qiyi.loglibrary.formatter.thread.DefaultThreadFormatter;
-import com.qiyi.loglibrary.formatter.thread.ThreadFormatter;
 import com.qiyi.loglibrary.formatter.throwable.DefaultThrowableFormatter;
 import com.qiyi.loglibrary.formatter.throwable.ThrowableFormatter;
 import com.qiyi.loglibrary.printer.Printer;
@@ -56,10 +54,6 @@ public class DefaultsFactory {
 
     public static ThrowableFormatter createThrowableFormatter() {
         return new DefaultThrowableFormatter();
-    }
-
-    public static ThreadFormatter createThreadFormatter() {
-        return new DefaultThreadFormatter();
     }
 
     public static Map<Class<?>, ObjectFormatter<?>> builtinObjectFormatters() {

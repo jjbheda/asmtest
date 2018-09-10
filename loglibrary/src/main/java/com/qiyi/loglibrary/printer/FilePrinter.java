@@ -18,7 +18,7 @@ public class FilePrinter implements Printer {
     private Flattener flattener;
     private boolean clearOldDir = false;
 
-    public static ConcurrentHashMap<String,LogBeanCachePool> cacheMap = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<String, LogBeanCachePool> cacheMap = new ConcurrentHashMap<>();
 
     public FilePrinter(Builder builder) {
         flattener = builder.flattener;
@@ -26,17 +26,17 @@ public class FilePrinter implements Printer {
 
     @Override
     public synchronized void println(int logLevel, String mouduleName, String msg, boolean isThrowable) {
-        Log.e(TAG,TAG + "新的打印请求" + mouduleName + "__" + msg);
+        Log.e(TAG, TAG + "新的打印请求" + mouduleName + "__" + msg);
 
         if (!clearOldDir) {
             FileChecker.removeOldDayDir();
-            Log.e(TAG,"删除了旧文件");
+            Log.e(TAG, "已经做过旧文件检测");
             clearOldDir = true;
         }
 
         if (!cacheMap.containsKey(mouduleName)) {
             LogBeanCachePool cacheLogpool = new LogBeanCachePool(flattener, mouduleName);
-            cacheMap.put(mouduleName,cacheLogpool);
+            cacheMap.put(mouduleName, cacheLogpool);
         }
         LogBeanCachePool cacheLogpool = cacheMap.get(mouduleName);
         cacheLogpool.recordLog(logLevel, msg, isThrowable);
@@ -50,19 +50,15 @@ public class FilePrinter implements Printer {
             Log.e(Constant.ROOT_TAG, "轮询进入hasNext");
             Map.Entry entry = (Map.Entry) iter.next();
             Log.e(Constant.ROOT_TAG, "轮询进入Next");
-            LogBeanCachePool cacheLogBeanPool = (LogBeanCachePool)entry.getValue();
+            LogBeanCachePool cacheLogBeanPool = (LogBeanCachePool) entry.getValue();
             Log.e(Constant.ROOT_TAG, "轮询cacheLogBeanPool");
             if (cacheLogBeanPool.getBeanArray().size() == 0) {
                 Log.e(Constant.ROOT_TAG, "本次轮询未发现要写入的文件");
                 return;
             }
             Log.e(Constant.ROOT_TAG, "本次轮询尝试去写入文件。。。。。。。");
-            if (cacheLogBeanPool.countDownLatch.getCount() == 1) {
-                Log.e(Constant.ROOT_TAG, "本次轮询发现文件还在写入中.......");
-            } else {
-                Log.e(Constant.ROOT_TAG, "本次轮询发现文件，并且调用写入操作");
-                cacheLogBeanPool.pushToThreadPool(true);
-            }
+            cacheLogBeanPool.pushToThreadPool(true);
+
         }
     }
 

@@ -24,8 +24,7 @@ public class AppAplication extends Application {
 
         LogConfiguration configuration = new LogConfiguration.Builder()
                 .logLevel(BuildConfig.DEBUG ? LogLevel.ALL : LogLevel.WARN)
-                .withTread()
-                .withStackTrace(3)
+                .withStackTrace(4)
                 .build();
 
         LogStorer.init(context, configuration);

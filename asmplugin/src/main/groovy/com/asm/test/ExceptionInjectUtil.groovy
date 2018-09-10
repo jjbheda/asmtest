@@ -122,8 +122,8 @@ import org.objectweb.asm.commons.AdviceAdapter;
                 dup();
                 //调用pushException方法
                 println "调用pushException方法  --- > ,当前name------->" + owner
-                mv.visitMethodInsn(INVOKESTATIC, "com/example/printer/LogPrinter",
-                        "printException", "(Ljava/lang/Throwable;)V", false);
+                mv.visitMethodInsn(INVOKESTATIC, "com/qiyi/loglibrary/LogStorer",
+                        "e", "(Ljava/lang/Throwable;)V", false);
                 visitLabel(end);
             }
         }

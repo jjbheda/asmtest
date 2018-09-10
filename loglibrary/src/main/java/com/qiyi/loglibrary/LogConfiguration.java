@@ -2,7 +2,6 @@ package com.qiyi.loglibrary;
 
 import com.qiyi.loglibrary.formatter.object.ObjectFormatter;
 import com.qiyi.loglibrary.formatter.stacktrace.StackTraceFormatter;
-import com.qiyi.loglibrary.formatter.thread.ThreadFormatter;
 import com.qiyi.loglibrary.formatter.throwable.ThrowableFormatter;
 import com.qiyi.loglibrary.interceptor.Interceptor;
 import com.qiyi.loglibrary.strategy.LogLevel;
@@ -17,7 +16,6 @@ public class LogConfiguration {
     public int logLevel;
     public String moduleName;
     public String tag;
-    public boolean withThread;
     public boolean withExceptionStackTrace;      //是否打印异常  栈信息
     /**
      * The origin of stack trace elements from which we should NOT log when logging with stack trace,
@@ -29,7 +27,6 @@ public class LogConfiguration {
     public String stackTraceOrigin;
     public int stackTraceDepth;
     public ThrowableFormatter throwableFormatter;
-    public ThreadFormatter threadFormatter;
     public StackTraceFormatter stackTraceFormatter;
     public List<Interceptor> interceptors;
     /**
@@ -42,13 +39,10 @@ public class LogConfiguration {
         logLevel = builder.logLevel;
         moduleName = builder.moduleName;
         tag = builder.tag;
-        withThread = builder.withThread;
         withExceptionStackTrace = builder.withExceptionStackTrace;
         stackTraceDepth = builder.stackTraceDepth;
         stackTraceOrigin = builder.stackTraceOrigin;
-
         throwableFormatter = builder.throwableFormatter;
-        threadFormatter = builder.threadFormatter;
         stackTraceFormatter = builder.stackTraceFormatter;
         interceptors = builder.interceptors;
         objectFormatters = builder.objectFormatters;
@@ -85,13 +79,11 @@ public class LogConfiguration {
         private int logLevel = DEFAULT_LOG_LEVEL;
         private String moduleName = DEFAULT_TAG;
         private String tag = DEFAULT_TAG;
-        private boolean withThread;
         private boolean withExceptionStackTrace;
         private String stackTraceOrigin;
 
         private int stackTraceDepth;
         private ThrowableFormatter throwableFormatter;
-        private ThreadFormatter threadFormatter;
         private StackTraceFormatter stackTraceFormatter;
         private List<Interceptor> interceptors;
         private Map<Class<?>, ObjectFormatter<?>> objectFormatters;
@@ -103,13 +95,11 @@ public class LogConfiguration {
             logLevel = logConfiguration.logLevel;
             moduleName = logConfiguration.moduleName;
             tag = logConfiguration.tag;
-            withThread = logConfiguration.withThread;
             withExceptionStackTrace = logConfiguration.withExceptionStackTrace;
             stackTraceOrigin = logConfiguration.stackTraceOrigin;
             stackTraceDepth = logConfiguration.stackTraceDepth;
 
             throwableFormatter = logConfiguration.throwableFormatter;
-            threadFormatter = logConfiguration.threadFormatter;
             stackTraceFormatter = logConfiguration.stackTraceFormatter;
 
             if (logConfiguration.interceptors != null) {
@@ -136,16 +126,6 @@ public class LogConfiguration {
             return this;
         }
 
-        public Builder withTread() {
-            this.withThread = true;
-            return this;
-        }
-
-        public Builder withNoThread() {
-            this.withThread = false;
-            return this;
-        }
-
         public Builder withStackTrace(int depth) {
             withExceptionStackTrace(null, depth);
             return this;
@@ -167,11 +147,6 @@ public class LogConfiguration {
 
         public Builder throwableFormatter(ThrowableFormatter throwableFormatter) {
             this.throwableFormatter = throwableFormatter;
-            return this;
-        }
-
-        public Builder threadFormatter(ThreadFormatter threadFormatter) {
-            this.threadFormatter = threadFormatter;
             return this;
         }
 
@@ -231,10 +206,6 @@ public class LogConfiguration {
         private void initWithDefaultValues() {
             if (throwableFormatter == null) {
                 throwableFormatter = DefaultsFactory.createThrowableFormatter();
-            }
-
-            if (threadFormatter == null) {
-                threadFormatter = DefaultsFactory.createThreadFormatter();
             }
 
             if (stackTraceFormatter == null) {

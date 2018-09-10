@@ -11,20 +11,15 @@ public abstract class AbstractLogTask {
 	String moduleName;
 	Throwable tr;
 	String msg = "";
+	String threadInfo;
 
-	public AbstractLogTask(int logLevel, String moduleName, String msg, Throwable tr) {
+	public AbstractLogTask(int logLevel, String moduleName, String msg, Throwable tr, String threadInfo) {
 		this.logLevel = logLevel;
 		this.moduleName = moduleName;
 		this.tr = tr;
 		this.msg = (msg == null ? "" : msg);
+		this.threadInfo = threadInfo;
 	}
-
-//	public AbstractLogTask(int logLevel, String moduleName, String msg) {
-//		this.logLevel = logLevel;
-//		this.moduleName = moduleName;
-//		this.msg = msg;
-//	}
-
 
 	/**
 	 * 线程调用异步方法
