@@ -1,1 +1,1 @@
-include ':app', ':asmplugin', ':printer', ':loglibrary'
+include ':app', ':etracer', ':printer', ':loglibrary'

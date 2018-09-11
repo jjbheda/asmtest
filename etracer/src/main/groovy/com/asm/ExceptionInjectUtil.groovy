@@ -1,4 +1,4 @@
-package com.asm.test
+package com.asm
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;

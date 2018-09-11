@@ -225,7 +225,9 @@ public class LogManager {
         private String moduleName;
 
         public Builder() {
-            LogStorer.assertInitialized();
+            if(!LogStorer.checkInitialized()){
+                return;
+            }
         }
 
         public Builder logLevel(int logLevel) {

@@ -17,18 +17,7 @@ public class AppAplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = this.getBaseContext();
-        initLogStorer();
-    }
-
-    private void initLogStorer() {
-
-        LogConfiguration configuration = new LogConfiguration.Builder()
-                .logLevel(BuildConfig.DEBUG ? LogLevel.ALL : LogLevel.WARN)
-                .withStackTrace(4)
-                .build();
-
-        LogStorer.init(context, configuration);
-
+//        initLogStorer();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.asm.test
+package com.asm
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -23,5 +23,4 @@ class LogCollecter implements Plugin<Project> {
             }
         }
     }
-
 }

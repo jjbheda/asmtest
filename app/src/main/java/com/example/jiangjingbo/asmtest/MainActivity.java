@@ -1,6 +1,7 @@
 package com.example.jiangjingbo.asmtest;
 
 import android.Manifest;
+import android.app.Application;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,8 +18,10 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.jiangjingbo.sec.SecActivity;
+import com.qiyi.loglibrary.LogConfiguration;
 import com.qiyi.loglibrary.LogEntity;
 import com.qiyi.loglibrary.LogStorer;
+import com.qiyi.loglibrary.strategy.LogLevel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,6 +39,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+
+    }
+    private void initLogStorer() {
+
+        LogConfiguration configuration = new LogConfiguration.Builder()
+                .logLevel(BuildConfig.DEBUG ? LogLevel.ALL : LogLevel.WARN)
+                .withStackTrace(4)
+                .build();
+
+        LogStorer.init(AppAplication.context, configuration);
+
     }
 
     @Override
@@ -46,13 +60,27 @@ public class MainActivity extends AppCompatActivity {
         btn = (Button) findViewById(R.id.btn);
         btn_02 = (Button) findViewById(R.id.btn_02);
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Log.e(TAG, "初始化LogStorer");
+                initLogStorer();
+            }
+        }).start();
+
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        for (int i = 1; i < 10000; i++) {
+                        for (int i = 1; i < 10; i++) {
                             LogStorer.e("BI", "中非合作论坛北京峰会闭幕后，" +
                                     "9月4日晚，习近平主席同前来出席峰会的卢旺达总统、" +
                                     "非盟轮值主席卡加梅会面，表达了对此次盛会成功举办的心情-----。" + i + "");

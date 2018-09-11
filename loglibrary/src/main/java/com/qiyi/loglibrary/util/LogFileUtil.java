@@ -142,7 +142,6 @@ public class LogFileUtil {
         }
     }
 
-
     /**
      * 未避免产生性能问题，读取日志操作应该放在专门的线程池中
      * @param file 单个日志文件
@@ -153,16 +152,6 @@ public class LogFileUtil {
         StringBuilder sb = new StringBuilder();
         sb.append(FileUtils.file2String(file));
         return sb.toString();
-    }
-
-    /**
-     * 判断是否有需要删除的文件,规则：超过5天的文件会被删除掉
-     *
-     */
-
-    public void rmOldDir(String tag, Date date) {
-
-
     }
 
 }

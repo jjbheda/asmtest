@@ -16,10 +16,11 @@ public class LogStorer {
     public static Context mBaseContext;
     private static LogTaskController controller;
 
-    public static void assertInitialized() {
+    public static boolean checkInitialized() {
         if (!sIsInitialized) {
-            throw new IllegalStateException("LogStorer has not be initialized!!!");
+            Log.d(Constant.ROOT_TAG, "LogStorer is not initialized!!!");
         }
+        return sIsInitialized;
     }
 
     /**
@@ -28,6 +29,7 @@ public class LogStorer {
      * @param context
      * @param logConfiguration
      */
+
 
     public static void init(Context context, LogConfiguration logConfiguration) {
 
@@ -64,84 +66,108 @@ public class LogStorer {
     }
 
     public static void v(String moduleName, Throwable tr) {
-        assertInitialized();
+        if (!checkInitialized()){
+            return;
+        }
         String threadInfo = ThreadUtil.getThreadInfo(Thread.currentThread());
         LogTask task = new LogTask(LogLevel.VERBOSE, moduleName, "", tr, threadInfo);
         controller.addLogTask(task);
     }
 
     public static void v(String moduleName, String msg) {
-        assertInitialized();
+        if(!checkInitialized()){
+            return;
+        }
         String threadInfo = ThreadUtil.getThreadInfo(Thread.currentThread());
         LogTask task = new LogTask(LogLevel.VERBOSE, moduleName, msg, null, threadInfo);
         controller.addLogTask(task);
     }
 
     public static void d(String moduleName, Throwable tr) {
-        assertInitialized();
+        if(!checkInitialized()){
+            return;
+        }
         String threadInfo = ThreadUtil.getThreadInfo(Thread.currentThread());
         LogTask task = new LogTask(LogLevel.DEBUG, moduleName, "", tr, threadInfo);
         controller.addLogTask(task);
     }
 
     public static void d(String moduleName, String msg) {
-        assertInitialized();
+        if(!checkInitialized()){
+            return;
+        }
         String threadInfo = ThreadUtil.getThreadInfo(Thread.currentThread());
         LogTask task = new LogTask(LogLevel.WARN, moduleName, msg, null, threadInfo);
         controller.addLogTask(task);
     }
 
     public static void i(String moduleName, Throwable tr) {
-        assertInitialized();
+        if(!checkInitialized()){
+            return;
+        }
         String threadInfo = ThreadUtil.getThreadInfo(Thread.currentThread());
         LogTask task = new LogTask(LogLevel.INFO, moduleName, "", tr, threadInfo);
         controller.addLogTask(task);
     }
 
     public static void i(String moduleName, String msg) {
-        assertInitialized();
+        if(!checkInitialized()){
+            return;
+        }
         String threadInfo = ThreadUtil.getThreadInfo(Thread.currentThread());
         LogTask task = new LogTask(LogLevel.INFO, moduleName, msg, null, threadInfo);
         controller.addLogTask(task);
     }
 
     public static void w(String moduleName, String msg) {
-        assertInitialized();
+        if(!checkInitialized()){
+            return;
+        }
         String threadInfo = ThreadUtil.getThreadInfo(Thread.currentThread());
         LogTask task = new LogTask(LogLevel.WARN, moduleName, msg, null, threadInfo);
         controller.addLogTask(task);
     }
 
     public static void w(String moduleName, Throwable tr) {
-        assertInitialized();
+        if(!checkInitialized()){
+            return;
+        }
         String threadInfo = ThreadUtil.getThreadInfo(Thread.currentThread());
         LogTask task = new LogTask(LogLevel.WARN, moduleName, "", tr, threadInfo);
         controller.addLogTask(task);
     }
 
     public static void e(String moduleName, String msg) {
-        assertInitialized();
+        if(!checkInitialized()){
+            return;
+        }
         String threadInfo = ThreadUtil.getThreadInfo(Thread.currentThread());
         LogTask task = new LogTask(LogLevel.ERROR, moduleName, msg, null, threadInfo);
         controller.addLogTask(task);
     }
 
     public static void e(String moduleName, String msg, Throwable tr) {
-        assertInitialized();
+        if(!checkInitialized()){
+            return;
+        }
         String threadInfo = ThreadUtil.getThreadInfo(Thread.currentThread());
         LogTask task = new LogTask(LogLevel.ERROR, moduleName, "", tr, threadInfo);
         controller.addLogTask(task);
     }
 
     public static void e(String moduleName, Throwable tr) {
-        assertInitialized();
+        if(!checkInitialized()){
+            return;
+        }
         String threadInfo = ThreadUtil.getThreadInfo(Thread.currentThread());
         LogTask task = new LogTask(LogLevel.ERROR, moduleName, "", tr, threadInfo);
         controller.addLogTask(task);
     }
 
     public static void e(Throwable tr) {
-        assertInitialized();
+        if(!checkInitialized()){
+            return;
+        }
         String threadInfo = ThreadUtil.getThreadInfo(Thread.currentThread());
         LogTask task = new LogTask(LogLevel.ERROR, Constant.ROOT_TAG, "", tr, threadInfo);
         controller.addLogTask(task);

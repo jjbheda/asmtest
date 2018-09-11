@@ -1,4 +1,4 @@
-package com.asm.test
+package com.asm
 
 import groovy.json.JsonSlurper
 import groovy.json.internal.LazyMap
@@ -20,7 +20,7 @@ class TaskHooker {
     Collection<File> taskHook() {
         Collection<File> inputs = compileTask.outputs.files.files
         //获取到的是Map对象
-        File file = new File("injectconifg.json")
+        File file = new File("config/etracer/etracerconf.json")
         ArrayList<LazyMap> packageNameConfigList = new ArrayList<>()
 
         if (file.exists()) {
@@ -35,6 +35,9 @@ class TaskHooker {
             println 'packageName----->' + pg
             packageNameList.add(pg)
         }
+        print "scan packageNameList start-------------------------=----------"
+        println packageNameList
+        println "scan packageNameList end--------------------------------------"
         inputs.each { dir ->
             recursionDir(dir)
         }
@@ -48,9 +51,11 @@ class TaskHooker {
                 if (!fileName.startsWith("R\$") &&
                         !"R.class".equals(fileName) && !"BuildConfig.class".equals(fileName)
                         && file.getAbsolutePath().endsWith(".class")) {
+                    println  "路径" + file.getAbsolutePath()
 
                     for (String packageName : packageNameList) {
-                        if (file.getParent().endsWith(packageName)) {
+
+                        if (file.getAbsolutePath().contains(packageName)) {
                             println "hack 的class 名字" + file.getName()
                             ExceptionInjectUtil.processClass(file)
                         }
